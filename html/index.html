@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>Space Invaders</title>
+
+        <link rel="stylesheet" href="../css/style.css">
+        <script src="../js/context/apiContext.js" defer></script>
+        <script src="../js/context/authContext.js" defer></script>
+        <script src="../js/context/userHomePage.js" defer></script>
+        <script src="../js/lib/canvas.js" defer></script>
+        <script src="../js/globals.js" defer></script>
+    </head>
+    <body>
+        <h1>Space Invaders</h1>
+        <div id="signup-form">
+            <h3>Register</h3>
+            <form onsubmit="authContext.handleSignup(event)">
+                <div>
+                    <label for="signup-username">Username</label>
+                    <input name="username" id="signup-username" type="text" pattern="^[A-Za-z0-9!#$%&*^_-~]{3,20}$" required>
+                </div>
+
+                <div>
+                    <label for="signup-email">Email</label>
+                    <input name="email" id="signup-email" type="email" pattern="^[^@]+@[^@]+\.[^@]+$" required>
+                </div>
+
+                <div>
+                    <label for="signup-password">Password</label>
+                    <input name="password" id="signup-password" type="password" autocomplete="new-password" pattern="^[A-Za-z0-9!#$%&*^_-~]{6,30}" required>
+                </div>
+
+                <button type="submit">Sign Up</button>
+            </form>
+
+            <p>Already registered?
+                <a href="#" onclick="userHomePage.showLoginForm()">Log in</a>
+            </p>
+        </div>
+
+        <div id="login-form" class="hidden">
+            <h3>Login</h3>
+            <form onsubmit="authContext.handleLogin(event)">
+                <div>
+                    <label for="login-username">Username</label>
+                    <input name="username" id="login-username" type="text" pattern="^[A-Za-z0-9!#$%&*^_-~]{3,20}$" required>
+                </div>
+
+                <div>
+                    <label for="login-password">Password</label>
+                    <input name="password" id="login-password" type="password" autocomplete="current-password" pattern="^[A-Za-z0-9!#$%&*^_-~]{6,30}" required>
+                </div>
+
+                <button type="submit">Log in</button>
+
+                <p>Not registered?
+                    <a href="#" onclick="userHomePage.showSignupForm()">Register</a>
+                </p>
+            </form>
+        </div>
+    </body>
+</html>
