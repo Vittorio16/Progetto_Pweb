@@ -34,3 +34,6 @@ Game interface {
 
 
 aggiungere messaggio in mancato login/signup via serverside
+Clearare campi di login/input
+
+Riattivare autoupdate chrome

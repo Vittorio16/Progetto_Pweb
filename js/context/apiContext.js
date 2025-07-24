@@ -40,7 +40,7 @@ class ApiContext {
     }
 
     async login(username, password){
-                const payload = {username, password};
+        const payload = {username, password};
 
         try {
             const res = await fetch("../php/login.php", {
@@ -73,6 +73,35 @@ class ApiContext {
                 user: null,
                 token: null,
                 loggedIn: false, 
+            };
+        }
+    }
+
+    async logout(){
+        try {
+            const res = await fetch("../php/logout.php", {
+                method: "POST",
+                credentials: "include"
+            });
+
+            const data = await res.json();
+
+            if (data.status === "success") {
+                return {
+                    user: null,
+                    token: null,
+                    loggedIn: false
+                };
+            } else {
+                throw new Error("Logout failed");
+            }
+
+        } catch (error) {
+            console.error("Logout error:", error);
+            return {
+                user: null,
+                token: null,
+                loggedIn: false
             };
         }
     }

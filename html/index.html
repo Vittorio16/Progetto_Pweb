@@ -12,10 +12,11 @@
         <script src="../js/context/userHomePage.js" defer></script>
         <script src="../js/lib/canvas.js" defer></script>
         <script src="../js/globals.js" defer></script>
+        <script src="../js/handlers.js" defer></script>
     </head>
     <body>
         <h1>Space Invaders</h1>
-        <div id="signup-form">
+        <div id="signup-form" class="entry-form">
             <h3>Register</h3>
             <form onsubmit="authContext.handleSignup(event)">
                 <div>
@@ -41,7 +42,7 @@
             </p>
         </div>
 
-        <div id="login-form" class="hidden">
+        <div id="login-form" class="hidden entry-form">
             <h3>Login</h3>
             <form onsubmit="authContext.handleLogin(event)">
                 <div>
@@ -60,6 +61,29 @@
                     <a href="#" onclick="userHomePage.showSignupForm()">Register</a>
                 </p>
             </form>
+        </div>
+
+        <div id="user-home" class="user-home hidden">
+
+            <header class="top-bar">
+                <h2>Welcome, <span id="user-name"></span></h2>
+                <div id="menu-toggle" class="hamburger" onclick="toggleSidebar()">☰</div>
+            </header>
+
+            <nav id="sidebar" class="sidebar hidden">
+                <button onclick="viewHistory()">Game History</button>
+                <button onclick="viewScoreboard()">Global Scoreboard</button>
+                <button onclick="viewGuide()">Game Guide</button>
+                <button onclick="authContext.handleLogout(event)">Log Out</button>
+            </nav>
+
+            <div class="game-canvas-container">
+                <canvas id="game-canvas" width="800" height="400"></canvas>
+            </div>
+
+            <div class="play-button-container">
+                <button onclick="startGame()">Play a New Game</button>
+            </div>
         </div>
     </body>
 </html>

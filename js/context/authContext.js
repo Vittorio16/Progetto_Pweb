@@ -65,11 +65,23 @@ class AuthContext {
         const {user, token, loggedIn} = await apiContext.login(username, password);
 
         this.user = user;
-        this.toker = token;
+        this.token = token;
         this.loggedIn = loggedIn;
 
         if (loggedIn){
             userHomePage.displayProfile();
         }
+    }
+
+    async handleLogout(event){
+        event.preventDefault();
+
+        const {user, token, loggedIn} = await apiContext.logout();
+
+        this.user = user;
+        this.token = token;
+        this.loggedIn = loggedIn;
+
+        userHomePage.logout();
     }
 }
