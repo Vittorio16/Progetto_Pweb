@@ -52,7 +52,17 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
             $_SESSION["user_id"] = $user["user_id"];
             $_SESSION["token"] = $token;
-            setcookie("session_token", $token, time() + 3600,"/", false, true);
+            $_SESSION["username"] = $username;
+            $_SESSION["email"] = $email;
+            
+            setcookie("session_token", $token, [
+                'expires' => time() + 3600,
+                'path' => '/',
+                'secure' => true,           
+                'httponly' => true,
+                'samesite' => 'Strict',
+            ]);
+
 
             echo json_encode([
                 "status"=> "success",
