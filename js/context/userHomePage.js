@@ -1,11 +1,15 @@
 class UserHomePage {
     constructor(){}
 
-    displayProfile(){
+    displayProfile(user){
         this.hideForms();
 
         const user_home = document.getElementById("user-home");
         user_home.classList.remove("hidden");
+
+        const username = document.getElementById("user-name");
+
+        username.textContent = user["username"];
     }
     
     showLoginForm(){

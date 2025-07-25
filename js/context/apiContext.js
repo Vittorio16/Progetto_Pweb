@@ -53,6 +53,7 @@ class ApiContext {
 
             const resData = await res.json();
             if (resData.status === "success"){
+                console.log(resData.user);
                 return {
                     user: resData.user,
                     token: resData.token,
@@ -103,6 +104,37 @@ class ApiContext {
                 token: null,
                 loggedIn: false
             };
+        }
+    }
+
+    async check_logged_in(){
+        try{
+            const res = await fetch("../php/check_session.php", {
+                method: "GET",
+                credentials: "include"
+            }); 
+
+            const data = await res.json();
+            if (data.status === "success"){
+                return {
+                    user: data.user,
+                    token: data.token,
+                    loggedIn: true,
+                };
+            } else {
+                return {
+                    user: null,
+                    token: null,
+                    loggedIn: false,
+                };
+            }
+        } catch(error) {
+            console.log("Session check failed:", error);
+            return {
+                user: null,
+                token: null,
+                loggedIn: false,
+            }
         }
     }
 }

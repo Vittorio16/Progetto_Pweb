@@ -1,20 +1,14 @@
 Create index with user signup, login (with hiding functions in js)
 
 Create home page, with buttons for {
-    history
-    scoreboards
-    new game
-    log out
-    guide
 }       when buttons clicked, pop-up window (dialog) to show them,   and displaying {
     username
     high score
 }
 
 Guide {
-    style sheet for guide
-    buttons for going back to home page
 }
+
 Game interface {
     fixed width canvas (look canvas slides)
     collisions
@@ -35,5 +29,6 @@ Game interface {
 
 aggiungere messaggio in mancato login/signup via serverside
 Clearare campi di login/input
+Controllare se poter accedere alla guida senza aver fatto login è un problema
 
 Riattivare autoupdate chrome

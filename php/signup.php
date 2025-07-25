@@ -84,6 +84,12 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         // If the query ran successfully, gets the user_id associated with the new user and returns the session token
         $user_id = $conn->insert_id;
 
+        $query = $conn->prepare("INSERT INTO user_scores (user_id, score) VALUES (?, ?)");
+
+        $high_score = 0;
+        $query->bind_param("si", $user_id, $high_score);
+        $query->execute();
+
         $token = bin2hex(random_bytes(32));
 
         $_SESSION["user_id"] = $user_id;
@@ -106,6 +112,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 "user_id" => $user_id,
                 "username" => $username,
                 "email" => $email,
+                "high_score" => $high_score,
             ],
             "token" => $token,
             ]);

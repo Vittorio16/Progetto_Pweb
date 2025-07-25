@@ -39,7 +39,7 @@ class AuthContext {
         this.loggedIn = loggedIn;
 
         if (loggedIn){
-            userHomePage.displayProfile();
+            userHomePage.displayProfile(user);
         }
     }
 
@@ -69,9 +69,10 @@ class AuthContext {
         this.loggedIn = loggedIn;
 
         if (loggedIn){
-            userHomePage.displayProfile();
+            userHomePage.displayProfile(user);
         }
     }
+
 
     async handleLogout(event){
         event.preventDefault();
@@ -83,5 +84,18 @@ class AuthContext {
         this.loggedIn = loggedIn;
 
         userHomePage.logout();
+    }
+
+
+    async handle_check_logged_in(){
+        const {user, token, loggedIn} = await apiContext.check_logged_in();
+
+        this.user = user;
+        this.token = token;
+        this.loggedIn = loggedIn;
+
+        if (loggedIn){
+            userHomePage.displayProfile(user);
+        }
     }
 }

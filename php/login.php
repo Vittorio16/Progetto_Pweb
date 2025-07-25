@@ -52,8 +52,6 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
             $_SESSION["user_id"] = $user["user_id"];
             $_SESSION["token"] = $token;
-            $_SESSION["username"] = $username;
-            $_SESSION["email"] = $email;
             
             setcookie("session_token", $token, [
                 'expires' => time() + 3600,
@@ -64,13 +62,20 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             ]);
 
 
+            $query = $conn->prepare("SELECT score FROM user_scores WHERE user_id = ?");
+            $query->bind_param("i", $user["user_id"]);
+            $query->execute();
+
+            $high_score = $query->get_result()->fetch_assoc();
+
             echo json_encode([
                 "status"=> "success",
-                "message"=> "User registered",
+                "message"=> "User logged in",
                 "user" => [
                     "user_id" => $user["user_id"],
                     "username" => $user["username"],
                     "email" => $user["email"],
+                    "high_score" => $high_score["score"],
                 ],
                 "token" => $token,
                 ]);
