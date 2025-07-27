@@ -1,6 +1,6 @@
 export class GameState {
     constructor(canvas_width, canvas_height){
-        this.player = {x: canvas_width / 2 - 16, y: canvas_height - 52, width: 32, height: 32};
+        this.player = {x: canvas_width / 2 - 16, y: canvas_height - 52, width: 32, height: 32, speed: 200, direction: 0};
         this.enemies = [];
         this.bullets = [];
         this.score = 0;
@@ -40,7 +40,10 @@ export class GameState {
             current_y += (canvas_height - 320) / num_rows;
         }
     }
+
+    // Updates the player and enemies every game loop
     update(delta_seconds){
+        this.player.x += this.player.direction * this.player.speed * delta_seconds;
         // TODO
     }
 }

@@ -8,6 +8,7 @@ Guide {}
 Game interface {
     fixed width canvas (look canvas slides)
     collisions (make sure bullet can only kill one enemy by continuing once enemy hit)
+    make player stop at the edge of the board
     speed multiplier based on round
     shields
     lives
@@ -15,7 +16,7 @@ Game interface {
     explosions on impact
     small stop on death
     random spawning ufo width score based on its speed (random)
-    button to quit game (not saving score)
+    button to quit game (not saving score) - change start button to quit button when game active -- remove event listeners on keys
 } on game over {
     score (and save it)
     congratulations if new high score

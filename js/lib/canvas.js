@@ -4,8 +4,9 @@ export class GameCanvas {
     constructor(canvasElement){
         this.canvas = canvasElement;
         this.ctx = this.canvas.getContext("2d");
-        this.lastTime = 0;
 
+        this.lastTime = 0;
+        this.keys = {};
         this.imagesLoaded = 0;
 
         const width = document.getElementById("game-canvas").width;
@@ -24,11 +25,9 @@ export class GameCanvas {
         this.mid_enemy_img.src = "../js/lib/images/mid_enemy.png";
         this.mid_enemy_img.onload = () => this.checkAllImagesLoaded();
 
-
         this.bot_enemy_img = new Image();
         this.bot_enemy_img.src = "../js/lib/images/bot_enemy.png";
         this.bot_enemy_img.onload = () => this.checkAllImagesLoaded();
-
 
         this.player_img = new Image();
         this.player_img.src = "../js/lib/images/player_ship.png";
@@ -36,9 +35,25 @@ export class GameCanvas {
 
     }
 
+
     startGame(){
-        // TODO
+        this.timestamp = 0;
+        
+        window.addEventListener("keydown", (e) =>{
+            this.keys[e.code] = true;
+        })
+
+        window.addEventListener("keyup", (e) =>{
+            this.keys[e.code] = false;
+        })
+        requestAnimationFrame(this.gameLoop.bind(this));
     }
+
+
+    endGame(){
+        //TODO
+    }
+
 
     // Makes sure all pngs are loaded before trying to draw the board
     checkAllImagesLoaded(){
@@ -48,9 +63,11 @@ export class GameCanvas {
         }
     }
 
-    drawGame(){
-        const player = this.gameState.player;
 
+    drawGame(){
+        this.ctx.clearRect(0, 0, this.width, this.height);
+        
+        const player = this.gameState.player;
 
         // Draws the player
         if (this.player_img.complete) {
@@ -82,12 +99,31 @@ export class GameCanvas {
         }
     }
 
+
+    // Tells the gameState where to move the player
+    updatePlayerInput(){
+        let dx = 0;
+        if (this.keys["ArrowLeft"]) {
+            dx -= 1;
+        }
+        if (this.keys["ArrowRight"]){
+            dx += 1;
+        }
+
+        this.gameState.player.direction = dx;
+    }
+
+
     gameLoop(timestamp){
+        console.log("gaming");
         if (!this.lastTime) this.lastTime = timestamp;
         const delta_seconds = (timestamp - this.lastTime) / 1000;
 
 
+        // Updates enemies, collisions, player positions and shields
+        this.updatePlayerInput();
         this.gameState.update(delta_seconds);
+
         this.drawGame();
 
         this.lastTime = timestamp;
