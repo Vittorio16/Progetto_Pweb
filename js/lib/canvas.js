@@ -6,20 +6,79 @@ export class GameCanvas {
         this.ctx = this.canvas.getContext("2d");
         this.lastTime = 0;
 
-        this.gameState = new GameState();
-        this.drawGame();
+        this.imagesLoaded = 0;
+
+        const width = document.getElementById("game-canvas").width;
+        const height = document.getElementById("game-canvas").height;
+
+        this.width = width;
+        this.height = height;
+
+        this.gameState = new GameState(width, height);
+
+        this.top_enemy_img = new Image();
+        this.top_enemy_img.src = "../js/lib/images/top_enemy.png";
+        this.top_enemy_img.onload = () => this.checkAllImagesLoaded();
+
+        this.mid_enemy_img = new Image();
+        this.mid_enemy_img.src = "../js/lib/images/mid_enemy.png";
+        this.mid_enemy_img.onload = () => this.checkAllImagesLoaded();
+
+
+        this.bot_enemy_img = new Image();
+        this.bot_enemy_img.src = "../js/lib/images/bot_enemy.png";
+        this.bot_enemy_img.onload = () => this.checkAllImagesLoaded();
+
+
+        this.player_img = new Image();
+        this.player_img.src = "../js/lib/images/player_ship.png";
+        this.player_img.onload = () => this.checkAllImagesLoaded();
+
     }
 
-    play(){
+    startGame(){
         // TODO
     }
 
-    drawGame(){
-        const player_img = new Image();
-        player_img.src = "../js/lib/images/player_ship.png";
+    // Makes sure all pngs are loaded before trying to draw the board
+    checkAllImagesLoaded(){
+        this.imagesLoaded++;
+        if (this.imagesLoaded === 4){
+            this.drawGame();
+        }
+    }
 
-        player_img.onload = () => {
-            this.ctx.drawImage(player_img, 100, 100, 32, 32);
+    drawGame(){
+        const player = this.gameState.player;
+
+
+        // Draws the player
+        if (this.player_img.complete) {
+            this.ctx.drawImage(this.player_img, player.x, player.y, 32, 32);
+        } else {
+            console.log("Couldn't load player");
+            return;
+        }
+
+        // Draws the enemies
+        if (this.top_enemy_img.complete && this.mid_enemy_img.complete && this.bot_enemy_img.complete){
+            for (let i = 0; i < this.gameState.enemies.length; i++){
+                const current_enemy = this.gameState.enemies[i];
+                let current_img;
+
+                if (current_enemy.score === 30){
+                    current_img = this.top_enemy_img;
+                } else if (current_enemy.score === 20){
+                    current_img = this.mid_enemy_img;
+                } else if (current_enemy.score === 10){
+                    current_img = this.bot_enemy_img;
+                }
+
+                this.ctx.drawImage(current_img, current_enemy.x, current_enemy.y, 32, 32);
+            }
+        } else {
+            console.log("Couldn't load enemies");
+            return;
         }
     }
 

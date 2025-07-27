@@ -1,17 +1,13 @@
 Create index with user signup, login (with hiding functions in js)
 
-Create home page, with buttons for {
-}       when buttons clicked, pop-up window (dialog) to show them,   and displaying {
-    username
-    high score
-}
+Create home page, with buttons for {}
+when buttons clicked, pop-up window (dialog) to show them,   and displaying {}
 
-Guide {
-}
+Guide {}
 
 Game interface {
     fixed width canvas (look canvas slides)
-    collisions
+    collisions (make sure bullet can only kill one enemy by continuing once enemy hit)
     speed multiplier based on round
     shields
     lives
