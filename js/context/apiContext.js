@@ -1,4 +1,4 @@
-class ApiContext {
+export class ApiContext {
     constructor(){}
 
     async signup(username, email, password){
@@ -53,7 +53,7 @@ class ApiContext {
 
             const resData = await res.json();
             if (resData.status === "success"){
-                console.log(resData.user);
+
                 return {
                     user: resData.user,
                     token: resData.token,

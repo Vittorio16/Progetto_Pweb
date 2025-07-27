@@ -11,7 +11,7 @@
     margin-bottom: 2rem;
 }
 
-.top-bar h2 {
+.top-bar h2, .centered-container h2 {
     font-size: 1.5rem;
     color: #00ffcc;
 }
@@ -37,12 +37,14 @@
     z-index: 10;
 }
 
-.play-button-container {
+.centered-container {
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-top: 1rem;
+    margin-bottom: 1rem;
 }
 
-.play-button-container > button {
+.centered-container > button {
     width: 15rem;
 }

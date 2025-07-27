@@ -9,7 +9,8 @@ if (isset($_SESSION['user_id'], $_SESSION['token'], $_COOKIE['session_token'])) 
             'user' => [
                 'user_id' => $_SESSION['user_id'],
                 'username' => $_SESSION['username'] ?? '',
-                'email' => $_SESSION['email'] ?? ''
+                'email' => $_SESSION['email'] ?? '',
+                "high_score" => $_SESSION["high_score"] ?? '',
             ],
             "token" =>  $_SESSION['token'],
         ]);

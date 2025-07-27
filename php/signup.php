@@ -96,6 +96,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         $_SESSION["token"] = $token;
         $_SESSION["username"] = $username;
         $_SESSION["email"] = $email;
+        $_SESSION["high_score"] = $high_score;
 
         setcookie("session_token", $token, [
             'expires' => time() + 3600,

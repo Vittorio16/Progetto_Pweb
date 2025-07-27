@@ -7,12 +7,8 @@
         <title>Space Invaders</title>
 
         <link rel="stylesheet" href="../css/style.css">
-        <script src="../js/context/apiContext.js" defer></script>
-        <script src="../js/context/authContext.js" defer></script>
-        <script src="../js/context/userHomePage.js" defer></script>
-        <script src="../js/lib/canvas.js" defer></script>
-        <script src="../js/globals.js" defer></script>
-        <script src="../js/handlers.js" defer></script>
+        <script src="../js/globals.js" type="module" defer></script>
+        <script src="../js/handlers.js" type="module" defer></script>
     </head>
     <body>
         <h1>Space Invaders</h1>
@@ -78,10 +74,13 @@
             </nav>
 
             <div class="game-canvas-container">
-                <canvas id="game-canvas" width="800" height="400"></canvas>
+                <canvas id="game-canvas" width="1000" height="500"></canvas>
             </div>
 
-            <div class="play-button-container">
+            <div id="high_score" class="centered-container">
+                <h2 id="high_score_h">High Score: </h2>
+            </div>
+            <div class="centered-container">
                 <button onclick="startGame()">Play a New Game</button>
             </div>
         </div>

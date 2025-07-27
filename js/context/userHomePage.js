@@ -1,4 +1,4 @@
-class UserHomePage {
+export class UserHomePage {
     constructor(){}
 
     displayProfile(user){
@@ -10,6 +10,8 @@ class UserHomePage {
         const username = document.getElementById("user-name");
 
         username.textContent = user["username"];
+
+        document.getElementById("high_score_h").textContent = "High Score: " + user["high_score"];
     }
     
     showLoginForm(){

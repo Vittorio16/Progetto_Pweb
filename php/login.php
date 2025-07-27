@@ -52,6 +52,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
             $_SESSION["user_id"] = $user["user_id"];
             $_SESSION["token"] = $token;
+            $_SESSION["username"] = $user["username"];
+            $_SESSION["email"] = $user["email"];
             
             setcookie("session_token", $token, [
                 'expires' => time() + 3600,
@@ -67,6 +69,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $query->execute();
 
             $high_score = $query->get_result()->fetch_assoc();
+            $_SESSION["high_score"] = $high_score["score"];
 
             echo json_encode([
                 "status"=> "success",

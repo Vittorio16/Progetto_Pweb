@@ -1,4 +1,4 @@
-class AuthContext {
+export class AuthContext {
     constructor(){
         this.user = null;
         this.token = null;
