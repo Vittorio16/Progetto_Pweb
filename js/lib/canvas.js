@@ -7,6 +7,8 @@ export class GameCanvas {
 
         this.lastTime = 0;
         this.keys = {};
+        this.enemy_move_interval = null;
+
         this.imagesLoaded = 0;
 
         const width = document.getElementById("game-canvas").width;
@@ -41,11 +43,14 @@ export class GameCanvas {
         
         window.addEventListener("keydown", (e) =>{
             this.keys[e.code] = true;
-        })
+        });
 
         window.addEventListener("keyup", (e) =>{
             this.keys[e.code] = false;
-        })
+        });
+
+        this.enemy_movement_loop();
+
         requestAnimationFrame(this.gameLoop.bind(this));
     }
 
@@ -66,7 +71,7 @@ export class GameCanvas {
 
     drawGame(){
         this.ctx.clearRect(0, 0, this.width, this.height);
-        
+
         const player = this.gameState.player;
 
         // Draws the player
@@ -114,8 +119,20 @@ export class GameCanvas {
     }
 
 
+    // Tells weather enemies are moving or not
+    enemy_movement_loop(){
+        this.enemy_move_interval = setInterval(() => {
+            console.log("changing movement");
+            if (this.gameState.enemy_position.moving === true){
+                this.gameState.enemy_position.moving = false;
+            } else {
+                this.gameState.enemy_position.moving = true;
+            }
+        }, 500);
+    }
+
+
     gameLoop(timestamp){
-        console.log("gaming");
         if (!this.lastTime) this.lastTime = timestamp;
         const delta_seconds = (timestamp - this.lastTime) / 1000;
 

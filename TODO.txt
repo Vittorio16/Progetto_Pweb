@@ -8,8 +8,8 @@ Guide {}
 Game interface {
     fixed width canvas (look canvas slides)
     collisions (make sure bullet can only kill one enemy by continuing once enemy hit)
-    make player stop at the edge of the board
     speed multiplier based on round
+    update max_enemy x, y, based on kills
     shields
     lives
     death animation
@@ -27,5 +27,6 @@ Game interface {
 aggiungere messaggio in mancato login/signup via serverside
 Clearare campi di login/input
 Controllare se poter accedere alla guida senza aver fatto login è un problema
+Reset enemy movement interval and enemy_moving
 
 Riattivare autoupdate chrome
