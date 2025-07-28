@@ -39,6 +39,7 @@ export class GameCanvas {
 
 
     startGame(){
+        document.getElementById("start-game").disabled = true;
         this.timestamp = 0;
         
         window.addEventListener("keydown", (e) =>{
@@ -48,6 +49,7 @@ export class GameCanvas {
         window.addEventListener("keyup", (e) =>{
             this.keys[e.code] = false;
         });
+
 
         this.enemy_movement_loop();
 
@@ -102,6 +104,19 @@ export class GameCanvas {
             console.log("Couldn't load enemies");
             return;
         }
+
+        for (let i = 0; i < this.gameState.bullets.length; i++){
+            this.ctx.beginPath();
+            this.ctx.moveTo(this.gameState.bullets[i].x,  this.gameState.bullets[i].y);    
+            if (this.gameState.bullets[i].friendly){
+                this.ctx.lineTo(this.gameState.bullets[i].x, this.gameState.bullets[i].y + 10);   
+            } else {
+                this.ctx.lineTo(this.gameState.bullets[i].x, this.gameState.bullets[i].y - 10);   
+            }
+            this.ctx.strokeStyle = 'red'; 
+            this.ctx.lineWidth = 2;       
+            this.ctx.stroke();
+        }
     }
 
 
@@ -115,6 +130,12 @@ export class GameCanvas {
             dx += 1;
         }
 
+        if (this.keys["Space"]){
+            this.gameState.player.shooting = true;
+        } else {
+            this.gameState.player.shooting = false;
+        }
+
         this.gameState.player.direction = dx;
     }
 
@@ -122,7 +143,6 @@ export class GameCanvas {
     // Tells weather enemies are moving or not
     enemy_movement_loop(){
         this.enemy_move_interval = setInterval(() => {
-            console.log("changing movement");
             if (this.gameState.enemy_position.moving === true){
                 this.gameState.enemy_position.moving = false;
             } else {

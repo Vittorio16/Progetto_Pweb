@@ -1,11 +1,13 @@
 export class GameState {
     constructor(canvas_width, canvas_height){
-        this.player = {x: canvas_width / 2 - 16, y: canvas_height - 52, width: 32, height: 32, speed: 200, direction: 0};
+        this.player = {x: canvas_width / 2 - 16, y: canvas_height - 52, width: 32, height: 32, speed: 200, direction: 0, shooting: false, reloading: false};
 
         this.enemies = []; 
         this.enemy_position = {moving: false, direction: 1, next_dir: -1, current_displacement: 0, max_x: 0, min_x: 50, max_y: 0, speed: 50};
 
         this.bullets = [];
+        this.bullet_speed = {friendly: 400, enemy: 100};
+
         this.score = 0;
         this.shields = [];
 
@@ -16,6 +18,8 @@ export class GameState {
         this.add_enemies(canvas_width, canvas_height);
     }
 
+
+    // Creates enemies
     add_enemies(canvas_width, canvas_height){
         const num_horizontal_enemies = 11;
         const num_rows = 5;
@@ -53,6 +57,28 @@ export class GameState {
     }
 
 
+    // Generates player and enemy bullets
+    add_bullet(player_bullet, x_origin = this.player.x, y_origin = this.player.y){
+        if (player_bullet){
+            this.bullets.push({x: x_origin + 16, y: y_origin - 10, friendly: player_bullet});
+        } else {
+            this.bullets.push({x: x_origin + 16, y: y_origin + 42, friendly: player_bullet});
+        }
+    }
+
+
+    // For each enemy, small probability of firing a bullet
+    generate_enemy_bullets(){
+        for (let i = 0; i < this.enemies.length; i++){
+            const shouldFire = Math.random() < 0.0003;
+            console.log(this.enemies[i].x);
+            if (shouldFire){
+                this.add_bullet(false, this.enemies[i].x, this.enemies[i].y);
+            }
+        }
+    }
+
+
     // Moves the player in the direction of the arrow key, if allowed
     movePlayer(delta_seconds){
         const x = this.player.x + this.player.direction * this.player.speed * delta_seconds;
@@ -62,6 +88,15 @@ export class GameState {
             this.player.x = this.max_x - 32;
         } else{
             this.player.x = x;
+        }
+
+        if (this.player.shooting && !this.player.reloading){
+            this.add_bullet(true);
+            this.player.reloading = true;
+
+            setTimeout(() => {
+                this.player.reloading = false;
+            }, 500);
         }
     }
 
@@ -109,11 +144,22 @@ export class GameState {
     }
 
 
+    // Moves enemy bullets down and player bullets up
+    move_bullets(delta_seconds){
+        for (let i = 0; i < this.bullets.length; i++){
+            if (this.bullets[i].friendly){
+                this.bullets[i].y -= this.bullet_speed.friendly * delta_seconds;
+            } else {
+                this.bullets[i].y += this.bullet_speed.enemy * delta_seconds;
+            }
+        }
+    }
     // Updates the player and enemies every game loop
     update(delta_seconds){
+        this.generate_enemy_bullets();
+
         this.movePlayer(delta_seconds);
 
-        console.log(this.enemy_position.moving);
         // Decides where to move enemies
         if (this.enemy_position.moving){
             if (this.enemy_position.direction === 1 || this.enemy_position.direction === -1){
@@ -123,5 +169,7 @@ export class GameState {
                 this.move_enemies_vertical(delta_seconds);
             }
         }
+
+        this.move_bullets(delta_seconds)
     }
 }
