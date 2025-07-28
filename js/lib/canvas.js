@@ -9,6 +9,9 @@ export class GameCanvas {
         this.keys = {};
         this.enemy_move_interval = null;
 
+        this.listenKeydown = (e) => { this.keys[e.code] = true;};
+        this.listenKeyup = (e) => { this.keys[e.code] = false;};
+
         this.imagesLoaded = 0;
 
         const width = document.getElementById("game-canvas").width;
@@ -42,13 +45,8 @@ export class GameCanvas {
         document.getElementById("start-game").disabled = true;
         this.timestamp = 0;
         
-        window.addEventListener("keydown", (e) =>{
-            this.keys[e.code] = true;
-        });
-
-        window.addEventListener("keyup", (e) =>{
-            this.keys[e.code] = false;
-        });
+        window.addEventListener("keydown", this.listenKeydown);
+        window.addEventListener("keyup", this.listenKeyup);
 
 
         this.enemy_movement_loop();
@@ -58,6 +56,10 @@ export class GameCanvas {
 
 
     endGame(){
+        window.removeEventListener("keydown", this.listenKeydown);
+        window.removeEventListener("keyup", this.listenKeyup);
+
+        clearInterval(this.enemy_move_interval);
         //TODO
     }
 
@@ -69,7 +71,6 @@ export class GameCanvas {
             this.drawGame();
         }
     }
-
 
     drawGame(){
         this.ctx.clearRect(0, 0, this.width, this.height);
@@ -164,6 +165,10 @@ export class GameCanvas {
         this.drawGame();
 
         this.lastTime = timestamp;
-        requestAnimationFrame(this.gameLoop.bind(this));
+        if (!this.gameState.gameOver){
+            requestAnimationFrame(this.gameLoop.bind(this));
+        } else {
+            this.endGame();
+        }
     }
 }

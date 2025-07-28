@@ -6,7 +6,6 @@ when buttons clicked, pop-up window (dialog) to show them,   and displaying {}
 Guide {}
 
 Game interface {
-    fixed width canvas (look canvas slides)
     collisions (make sure bullet can only kill one enemy by continuing once enemy hit)
     speed multiplier based on round, also more bullets, maybe enemy bullet speed up?
     update max_enemy x, y, based on kills

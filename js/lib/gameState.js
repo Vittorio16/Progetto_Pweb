@@ -1,9 +1,11 @@
 export class GameState {
     constructor(canvas_width, canvas_height){
+        this.gameOver = false;
+        
         this.player = {x: canvas_width / 2 - 16, y: canvas_height - 52, width: 32, height: 32, speed: 200, direction: 0, shooting: false, reloading: false};
 
         this.enemies = []; 
-        this.enemy_position = {moving: false, direction: 1, next_dir: -1, current_displacement: 0, max_x: 0, min_x: 50, max_y: 0, speed: 50};
+        this.enemy_position = {moving: false, direction: 1, next_dir: -1, current_displacement: 0, max_x: 0, min_x: 50, max_y: 0, speed: 150};
 
         this.bullets = [];
         this.bullet_speed = {friendly: 400, enemy: 100};
@@ -71,7 +73,6 @@ export class GameState {
     generate_enemy_bullets(){
         for (let i = 0; i < this.enemies.length; i++){
             const shouldFire = Math.random() < 0.0003;
-            console.log(this.enemies[i].x);
             if (shouldFire){
                 this.add_bullet(false, this.enemies[i].x, this.enemies[i].y);
             }
@@ -112,7 +113,6 @@ export class GameState {
         }
 
         const delta_y = this.enemy_position.speed * delta_seconds;
-        console.log(this.enemy_position.current_displacement);
 
         this.enemy_position.current_displacement += delta_y;
         this.enemy_position.max_y += delta_y;
@@ -154,6 +154,22 @@ export class GameState {
             }
         }
     }
+
+
+    // Handles bullet collisions
+    check_collisions(){
+
+    }
+
+
+    // Checks whether enemies have reached player height
+    check_enemies_bottom(){
+        if (this.enemy_position.max_y + 32 > this.player.y){
+            this.gameOver = true;
+        }
+    }
+
+
     // Updates the player and enemies every game loop
     update(delta_seconds){
         this.generate_enemy_bullets();
@@ -170,6 +186,9 @@ export class GameState {
             }
         }
 
-        this.move_bullets(delta_seconds)
+        this.move_bullets(delta_seconds);
+
+        this.check_collisions();
+        this.check_enemies_bottom();
     }
 }
