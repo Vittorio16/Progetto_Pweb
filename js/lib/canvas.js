@@ -43,8 +43,10 @@ export class GameCanvas {
 
     startGame(){
         document.getElementById("start-game").disabled = true;
-        this.timestamp = 0;
         
+        this.gameState = new GameState(this.width, this.height);
+        this.timestamp = 0;
+
         window.addEventListener("keydown", this.listenKeydown);
         window.addEventListener("keyup", this.listenKeyup);
 

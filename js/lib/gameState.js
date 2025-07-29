@@ -1,16 +1,21 @@
 export class GameState {
     constructor(canvas_width, canvas_height){
         this.gameOver = false;
-        
+        this.paused = false;
+        this.pauseTimer = 0;
+
         this.player = {x: canvas_width / 2 - 16, y: canvas_height - 52, width: 32, height: 32, speed: 200, direction: 0, shooting: false, reloading: false};
 
+        this.starting_enemy_speed = 50;
         this.enemies = []; 
-        this.enemy_position = {moving: false, direction: 1, next_dir: -1, current_displacement: 0, max_x: 0, min_x: 50, max_y: 0, speed: 150};
+        this.enemy_position = {moving: false, direction: 1, next_dir: -1, current_displacement: 0, max_x: 0, min_x: 50, max_y: 0, speed: 50};
 
         this.bullets = [];
         this.bullet_speed = {friendly: 400, enemy: 100};
 
         this.score = 0;
+        this.lives = 3;
+
         this.shields = [];
 
         this.max_x = canvas_width;
@@ -158,7 +163,26 @@ export class GameState {
 
     // Handles bullet collisions
     check_collisions(){
+        for (let i = this.bullets.length - 1; i >= 0; i--){
+            const bullet = this.bullets[i];
+            
+            // Bullet is friendly, check collisions with enemy
+            if (bullet.friendly){
+                for (let j = this.enemies.length - 1; j >= 0; j--){
+                    const enemy = this.enemies[j];
 
+                    if (bullet.x >= enemy.x && bullet.x <= enemy.x + 32 && bullet.y >= enemy.y && bullet.y <= enemy.y + 32){
+                        this.kill_enemy(j, i);
+                        break;
+                    }
+                }
+            } else {
+                // Bullet is enemy, check collisions with player
+                if (bullet.x >= this.player.x && bullet.x <= this.player.x + 32 && bullet.y >= this.player.y && bullet.y <= this.player.y + 32 ){
+                    this.removeLife(i);
+                }
+            }
+        }
     }
 
 
@@ -170,8 +194,83 @@ export class GameState {
     }
 
 
+    // Kills the enemy at an index of the enemies list, then checks for win conditions
+    kill_enemy(enemy_index, bullet_index){
+        let kill = this.enemies.splice(enemy_index, 1)[0];
+        this.bullets.splice(bullet_index, 1);
+        this.score += kill.score;
+
+        if (this.enemies.length === 0){
+            // For now, game over, but then implement multiple rounds
+            this.gameOver = true;
+            return;
+        }
+
+        // Updates enemy movement 
+        if (kill.x >= this.enemy_position.max_x){
+            let new_max = 0;
+
+            for (let i = 0; i < this.enemies.length; i++){
+                if (this.enemies[i].x > new_max){
+                    new_max = this.enemies[i].x;
+                }
+            }
+            this.enemy_position.max_x = new_max;
+        }
+
+        if (kill.x <= this.enemy_position.min_x){
+            let new_min = this.enemy_position.max_x;
+
+            for (let i = 0; i < this.enemies.length; i++){
+                if (this.enemies[i].x < new_min){
+                    new_min = this.enemies[i].x;
+                }
+            }
+            this.enemy_position.min_x = new_min;
+        }
+
+        if (kill.y + 32 >= this.enemy_position.max_y){
+            let new_max = 0;
+
+            for (let i = 0; i < this.enemies.length; i++){
+                if (this.enemies[i].y > new_max){
+                    new_max = this.enemies[i].y;
+                }
+            }
+            this.enemy_position.max_y = new_max;
+        }
+
+        this.enemy_position.speed += 3;
+    }
+
+
+    // Makes the player lose a life and checks for lose condition
+    removeLife(bullet_index){
+        this.bullets.splice(bullet_index, 1);
+        this.lives--;
+
+        if (this.lives === 0){
+            this.gameOver = true;
+            return;
+        }
+
+        this.bullets = [];
+        this.paused = true;
+        this.pauseTimer = 1;
+    }
+
+
     // Updates the player and enemies every game loop
     update(delta_seconds){
+        // When player is hit, small pause
+        if (this.paused) {
+            this.pauseTimer -= delta_seconds;
+            if (this.pauseTimer <= 0) {
+                this.paused = false;
+            }
+            return; 
+        }
+
         this.generate_enemy_bullets();
 
         this.movePlayer(delta_seconds);

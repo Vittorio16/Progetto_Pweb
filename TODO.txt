@@ -16,6 +16,7 @@ Game interface {
     small stop on death
     random spawning ufo width score based on its speed (random)
     button to quit game (not saving score) - change start button to quit button when game active -- remove event listeners on keys
+    implement life lost animation
 } on game over {
     score (and save it)
     congratulations if new high score
@@ -27,5 +28,7 @@ aggiungere messaggio in mancato login/signup via serverside
 Clearare campi di login/input
 Controllare se poter accedere alla guida senza aver fatto login è un problema
 Reset enemy movement interval and enemy_moving
+Implement multiple rounds
+add bullet spawn chance when enemies decrease
 
 Riattivare autoupdate chrome
