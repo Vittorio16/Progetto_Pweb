@@ -38,6 +38,9 @@ export class GameCanvas {
         this.player_img.src = "../js/lib/images/player_ship.png";
         this.player_img.onload = () => this.checkAllImagesLoaded();
 
+        this.shield_img = new Image();
+        this.shield_img.src = "../js/lib/images/shield.png";
+        this.shield_img.onload = () => this.checkAllImagesLoaded();
     }
 
 
@@ -69,7 +72,7 @@ export class GameCanvas {
     // Makes sure all pngs are loaded before trying to draw the board
     checkAllImagesLoaded(){
         this.imagesLoaded++;
-        if (this.imagesLoaded === 4){
+        if (this.imagesLoaded === 5){
             this.drawGame();
         }
     }
@@ -95,6 +98,13 @@ export class GameCanvas {
             return;
         }
 
+        // Draws the shields
+        const shields = this.gameState.shields;
+        if (this.shield_img.complete){
+            for (let i = 0; i < shields.length; i++){
+                this.ctx.drawImage(this.shield_img, shields[i].x, shields[i].y, 64, 64);
+            }
+        }
         // Draws the enemies
         if (this.top_enemy_img.complete && this.mid_enemy_img.complete && this.bot_enemy_img.complete){
             for (let i = 0; i < this.gameState.enemies.length; i++){

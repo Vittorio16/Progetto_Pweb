@@ -21,8 +21,9 @@ export class GameState {
         this.max_x = canvas_width;
         this.max_y = canvas_height;
         
-        // Populate the enemies array
+        // Populate the enemies and shields arrays
         this.add_enemies(canvas_width, canvas_height);
+        this.add_shields();
     }
 
 
@@ -60,6 +61,23 @@ export class GameState {
 
             current_x = 50;
             current_y += (canvas_height - 320) / num_rows;
+        }
+    }
+
+
+    // Each shield is 64x64
+    add_shields(){
+        for (let i = 0; i < 4; i++){
+
+            const s_x = this.max_x / 8 + i * (this.max_x / 4) - 32;
+            const s_y = this.max_y - 126;
+
+            const shield_hitbox = {
+                left_rect: {min_x: s_x + 2, max_x: s_x + 18, min_y: s_y + 2, max_y: s_y + 52},
+                center_rect: {min_x: s_x + 18,max_x: s_x + 48, min_y: s_y + 2, max_y: s_y + 20},
+                right_rect: {min_x: s_x + 48, max_x: s_x + 62, min_y: s_y + 2, max_y: s_y + 52},
+            }
+            this.shields.push({lives: 30, x: s_x, y: s_y, hitbox: shield_hitbox});
         }
     }
 
@@ -161,13 +179,39 @@ export class GameState {
     }
 
 
+    // Handles collisions with shield hitboxes
+    check_shield_hitbox(x, y, hitbox){
+        if (x >= hitbox.min_x && x <= hitbox.max_x && y >= hitbox.min_y && y <= hitbox.max_y){
+            return true;
+        }
+        return false;
+    }
+
+
     // Handles bullet collisions
     check_collisions(){
         let life_lost = false;
 
         for (let i = this.bullets.length - 1; i >= 0; i--){
             const bullet = this.bullets[i];
-            console.log(bullet);
+            let shield_hit = false;
+
+            // Check collisions with shield
+            for (let j = this.shields.length - 1; j >= 0; j--){
+                const shield = this.shields[j];
+
+                if (
+                    this.check_shield_hitbox(bullet.x, bullet.y, shield.hitbox.left_rect) ||
+                    this.check_shield_hitbox(bullet.x, bullet.y, shield.hitbox.center_rect) ||
+                    this.check_shield_hitbox(bullet.x, bullet.y, shield.hitbox.right_rect)
+                ){
+                    this.lose_shield(j);
+                    this.bullets.splice(i, 1);
+                }
+            }
+
+            if (shield_hit) continue;
+
             // Bullet is friendly, check collisions with enemy
             if (bullet.friendly){
                 for (let j = this.enemies.length - 1; j >= 0; j--){
@@ -250,6 +294,15 @@ export class GameState {
         this.enemy_position.speed += 3;
     }
 
+
+    // Makes the shield lose a life
+    lose_shield(index){
+        this.shields[index].lives--;
+
+        if (this.shields[index].lives === 0){
+            this.shields.splice(index, 1);
+        }
+    }
 
     // Makes the player lose a life and checks for lose condition
     removeLife(){
