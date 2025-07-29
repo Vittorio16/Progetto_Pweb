@@ -43,7 +43,7 @@ export class GameCanvas {
 
     startGame(){
         document.getElementById("start-game").disabled = true;
-        
+
         this.gameState = new GameState(this.width, this.height);
         this.timestamp = 0;
 
@@ -76,6 +76,14 @@ export class GameCanvas {
 
     drawGame(){
         this.ctx.clearRect(0, 0, this.width, this.height);
+
+        this.ctx.fillStyle = "#00ffcc";
+        this.ctx.font = "30px sans-serif";
+        this.ctx.textAlign = "left";
+        this.ctx.fillText(`Lives: ${this.gameState.lives}`, 20, 40);
+
+        this.ctx.textAlign = "center";
+        this.ctx.fillText(`Score: ${this.gameState.score}`, this.width/2, 40);
 
         const player = this.gameState.player;
 

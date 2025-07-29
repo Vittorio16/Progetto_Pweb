@@ -67,9 +67,9 @@ export class GameState {
     // Generates player and enemy bullets
     add_bullet(player_bullet, x_origin = this.player.x, y_origin = this.player.y){
         if (player_bullet){
-            this.bullets.push({x: x_origin + 16, y: y_origin - 10, friendly: player_bullet});
+            this.bullets.push({x: x_origin + 16, y: y_origin - 10, friendly: true});
         } else {
-            this.bullets.push({x: x_origin + 16, y: y_origin + 42, friendly: player_bullet});
+            this.bullets.push({x: x_origin + 16, y: y_origin + 42, friendly: false});
         }
     }
 
@@ -163,25 +163,33 @@ export class GameState {
 
     // Handles bullet collisions
     check_collisions(){
+        let life_lost = false;
+
         for (let i = this.bullets.length - 1; i >= 0; i--){
             const bullet = this.bullets[i];
-            
+            console.log(bullet);
             // Bullet is friendly, check collisions with enemy
             if (bullet.friendly){
                 for (let j = this.enemies.length - 1; j >= 0; j--){
                     const enemy = this.enemies[j];
 
                     if (bullet.x >= enemy.x && bullet.x <= enemy.x + 32 && bullet.y >= enemy.y && bullet.y <= enemy.y + 32){
-                        this.kill_enemy(j, i);
+                        this.kill_enemy(j);
+                        this.bullets.splice(i, 1);
                         break;
                     }
                 }
             } else {
                 // Bullet is enemy, check collisions with player
                 if (bullet.x >= this.player.x && bullet.x <= this.player.x + 32 && bullet.y >= this.player.y && bullet.y <= this.player.y + 32 ){
-                    this.removeLife(i);
+                    this.removeLife();
+                    life_lost = true;
+                    continue;
                 }
             }
+        }
+        if (life_lost){
+            this.bullets = [];
         }
     }
 
@@ -195,9 +203,8 @@ export class GameState {
 
 
     // Kills the enemy at an index of the enemies list, then checks for win conditions
-    kill_enemy(enemy_index, bullet_index){
+    kill_enemy(enemy_index){
         let kill = this.enemies.splice(enemy_index, 1)[0];
-        this.bullets.splice(bullet_index, 1);
         this.score += kill.score;
 
         if (this.enemies.length === 0){
@@ -245,8 +252,7 @@ export class GameState {
 
 
     // Makes the player lose a life and checks for lose condition
-    removeLife(bullet_index){
-        this.bullets.splice(bullet_index, 1);
+    removeLife(){
         this.lives--;
 
         if (this.lives === 0){
@@ -254,7 +260,6 @@ export class GameState {
             return;
         }
 
-        this.bullets = [];
         this.paused = true;
         this.pauseTimer = 1;
     }
