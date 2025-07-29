@@ -6,9 +6,9 @@ export class GameState {
 
         this.player = {x: canvas_width / 2 - 16, y: canvas_height - 52, width: 32, height: 32, speed: 200, direction: 0, shooting: false, reloading: false};
 
-        this.starting_enemy_speed = 50;
         this.enemies = []; 
-        this.enemy_position = {moving: false, direction: 1, next_dir: -1, current_displacement: 0, max_x: 0, min_x: 50, max_y: 0, speed: 50};
+        this.enemy_scaling = {speed_multiplier: 1 /50, projectile_chance: 0.0002, starting_enemy_speed: 50};
+        this.enemy_position = {moving: false, direction: 1, next_dir: -1, current_displacement: 0, max_x: 0, min_x: 50, max_y: 0, speed: 50, chance: 0.0002};
 
         this.bullets = [];
         this.bullet_speed = {friendly: 400, enemy: 100};
@@ -22,17 +22,31 @@ export class GameState {
         this.max_y = canvas_height;
         
         // Populate the enemies and shields arrays
-        this.add_enemies(canvas_width, canvas_height);
+        this.add_enemies();
         this.add_shields();
     }
 
 
+    spawn_next_wave(){
+        this.enemy_scaling.starting_enemy_speed += 10;
+        this.enemy_scaling.speed_multiplier += this.enemy_scaling.speed_multiplier / 2;
+        this.enemy_scaling.projectile_chance = this.enemy_scaling.projectile_chance * 1.5;
+
+        this.enemy_position = {moving: false, direction: 1, next_dir: -1, current_displacement: 0, max_x: 0, min_x: 50, max_y: 0, speed: 50, chance: 0.0002};
+
+        this.add_enemies();
+    }
+
+
     // Creates enemies
-    add_enemies(canvas_width, canvas_height){
+    add_enemies(){
         const num_horizontal_enemies = 11;
         const num_rows = 5;
         let current_x = 50;
         let current_y = 100;
+        
+        this.enemy_position.speed = this.enemy_scaling.starting_enemy_speed;
+        this.enemy_position.chance = this.enemy_scaling.projectile_chance;
 
         for (let i = 0; i < num_rows; i++){
             // Sets score depending on which row the enemy is in
@@ -52,7 +66,7 @@ export class GameState {
                 if (current_x > this.enemy_position.max_x) {
                     this.enemy_position.max_x = current_x;
                 }
-                current_x += (canvas_width - 500) / num_horizontal_enemies;
+                current_x += (this.max_x - 500) / num_horizontal_enemies;
             }
 
             if (current_y > this.enemy_position.max_y){
@@ -60,7 +74,7 @@ export class GameState {
             }
 
             current_x = 50;
-            current_y += (canvas_height - 320) / num_rows;
+            current_y += (this.max_y - 320) / num_rows;
         }
     }
 
@@ -93,9 +107,11 @@ export class GameState {
 
 
     // For each enemy, small probability of firing a bullet
-    generate_enemy_bullets(){
+    generate_enemy_bullets(delta_seconds){
+        console.log(delta_seconds);
         for (let i = 0; i < this.enemies.length; i++){
-            const shouldFire = Math.random() < 0.0003;
+            // Spawns evenly across frames thanks to delta seconds
+            const shouldFire = Math.random() < this.enemy_position.chance * delta_seconds * 62;
             if (shouldFire){
                 this.add_bullet(false, this.enemies[i].x, this.enemies[i].y);
             }
@@ -169,11 +185,15 @@ export class GameState {
 
     // Moves enemy bullets down and player bullets up
     move_bullets(delta_seconds){
-        for (let i = 0; i < this.bullets.length; i++){
+        for (let i = this.bullets.length - 1; i >= 0; i--){
             if (this.bullets[i].friendly){
                 this.bullets[i].y -= this.bullet_speed.friendly * delta_seconds;
             } else {
                 this.bullets[i].y += this.bullet_speed.enemy * delta_seconds;
+            }
+
+            if (this.bullets[i].y >= this.max_y || this.bullets[i].y < 0){
+                this.bullets.splice(i, 1);
             }
         }
     }
@@ -253,7 +273,7 @@ export class GameState {
 
         if (this.enemies.length === 0){
             // For now, game over, but then implement multiple rounds
-            this.gameOver = true;
+            this.spawn_next_wave();
             return;
         }
 
@@ -291,7 +311,8 @@ export class GameState {
             this.enemy_position.max_y = new_max;
         }
 
-        this.enemy_position.speed += 3;
+        this.enemy_position.speed += this.enemy_position.speed * this.enemy_scaling.speed_multiplier;
+        this.enemy_position.chance += this.enemy_position.chance * 1/30;
     }
 
 
@@ -303,6 +324,7 @@ export class GameState {
             this.shields.splice(index, 1);
         }
     }
+
 
     // Makes the player lose a life and checks for lose condition
     removeLife(){
@@ -329,7 +351,7 @@ export class GameState {
             return; 
         }
 
-        this.generate_enemy_bullets();
+        this.generate_enemy_bullets(delta_seconds);
 
         this.movePlayer(delta_seconds);
 

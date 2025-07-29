@@ -5,12 +5,14 @@ export class GameCanvas {
         this.canvas = canvasElement;
         this.ctx = this.canvas.getContext("2d");
 
+        this.animationFrameId = null;
+
         this.lastTime = 0;
         this.keys = {};
         this.enemy_move_interval = null;
 
-        this.listenKeydown = (e) => { this.keys[e.code] = true;};
-        this.listenKeyup = (e) => { this.keys[e.code] = false;};
+        this.listenKeydown = (e) => {this.keys[e.code] = true;};
+        this.listenKeyup = (e) => {this.keys[e.code] = false;};
 
         this.imagesLoaded = 0;
 
@@ -44,8 +46,27 @@ export class GameCanvas {
     }
 
 
-    startGame(){
-        document.getElementById("start-game").disabled = true;
+    // Makes sure event listeners and interval are cleared on game reset
+    resetGame(){
+        window.removeEventListener("keydown", this.listenKeydown);
+        window.removeEventListener("keyup", this.listenKeyup);
+
+        this.gameState = null;
+
+        clearInterval(this.enemy_move_interval);
+
+        if (this.animationFrameId){
+            cancelAnimationFrame(this.animationFrameId);
+            this.animationFrameId = null;
+        }
+    }
+
+
+    // If game is active, it restarts it; otherwise it simply starts a new game
+    toggleGame(){
+        this.resetGame();
+        document.getElementById("start-game").textContent = "Restart";
+        document.getElementById("start-game").blur();
 
         this.gameState = new GameState(this.width, this.height);
         this.timestamp = 0;
@@ -56,16 +77,24 @@ export class GameCanvas {
 
         this.enemy_movement_loop();
 
-        requestAnimationFrame(this.gameLoop.bind(this));
+        this.animationFrameId =  requestAnimationFrame(this.gameLoop.bind(this));
     }
 
 
+    // Displays GAME OVER data
     endGame(){
-        window.removeEventListener("keydown", this.listenKeydown);
-        window.removeEventListener("keyup", this.listenKeyup);
+        this.resetGame();
 
-        clearInterval(this.enemy_move_interval);
-        //TODO
+        document.getElementById("start-game").textContent = "Play a New Game";
+
+        this.ctx.fillStyle = "#00ffcc";
+        this.ctx.font = "bold 70px 'Segoe UI', sans-serif";
+        this.ctx.textAlign = "center";
+
+        this.ctx.fillText("GAME OVER", this.width / 2, this.height / 2);
+
+        this.ctx.font = "bold 40px 'Segoe UI', sans-serif";
+        this.ctx.fillText(`Final Score: ${this.gameState.score}`, this.width / 2, this.height / 2 + 100);
     }
 
 
@@ -81,7 +110,8 @@ export class GameCanvas {
         this.ctx.clearRect(0, 0, this.width, this.height);
 
         this.ctx.fillStyle = "#00ffcc";
-        this.ctx.font = "30px sans-serif";
+        this.ctx.font = "bold 30px 'Segoe UI', sans-serif";
+
         this.ctx.textAlign = "left";
         this.ctx.fillText(`Lives: ${this.gameState.lives}`, 20, 40);
 
@@ -90,12 +120,11 @@ export class GameCanvas {
 
         const player = this.gameState.player;
 
-        // Draws the player
-        if (this.player_img.complete) {
+        // Draws the player, flickering if just hit
+        if (this.player_img.complete && (this.gameState.pauseTimer <= 0 || Math.floor(this.gameState.pauseTimer * 10) % 2 === 0)) {
             this.ctx.drawImage(this.player_img, player.x, player.y, 32, 32);
         } else {
             console.log("Couldn't load player");
-            return;
         }
 
         // Draws the shields
@@ -103,8 +132,15 @@ export class GameCanvas {
         if (this.shield_img.complete){
             for (let i = 0; i < shields.length; i++){
                 this.ctx.drawImage(this.shield_img, shields[i].x, shields[i].y, 64, 64);
+
+                this.ctx.font = "10px sans-serif";
+                this.ctx.textAlign = "center";
+                this.ctx.fillText(this.gameState.shields[i].lives, shields[i].x + 32, shields[i].y + 16);
             }
+        } else {
+            console.log("Couldn't load shields");
         }
+ 
         // Draws the enemies
         if (this.top_enemy_img.complete && this.mid_enemy_img.complete && this.bot_enemy_img.complete){
             for (let i = 0; i < this.gameState.enemies.length; i++){
@@ -123,7 +159,6 @@ export class GameCanvas {
             }
         } else {
             console.log("Couldn't load enemies");
-            return;
         }
 
         for (let i = 0; i < this.gameState.bullets.length; i++){

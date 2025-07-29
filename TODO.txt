@@ -32,4 +32,6 @@ Reset enemy movement interval and enemy_moving
 Implement multiple rounds
 add bullet spawn chance when enemies decrease
 
+keep track of bullets shot, enemies killed and game time in order to perform server side controls (su gpt, canvas restart issues)
+
 Riattivare autoupdate chrome
