@@ -4,6 +4,8 @@ export class GameState {
         this.paused = false;
         this.pauseTimer = 0;
 
+        this.gameData = {bullets_shot: 0, time_elapsed: 0, enemy_score_spawned: 0, enemies_killed: 0};
+
         this.player = {x: canvas_width / 2 - 16, y: canvas_height - 52, width: 32, height: 32, speed: 200, direction: 0, shooting: false, reloading: false};
 
         this.enemies = []; 
@@ -14,7 +16,7 @@ export class GameState {
         this.bullet_speed = {friendly: 400, enemy: 100};
 
         this.score = 0;
-        this.lives = 3;
+        this.lives = 1;
 
         this.shields = [];
 
@@ -40,6 +42,8 @@ export class GameState {
 
     // Creates enemies
     add_enemies(){
+        this.gameData.enemy_score_spawned += 22 * 10 + 22 * 20 + 22 * 30;
+
         const num_horizontal_enemies = 11;
         const num_rows = 5;
         let current_x = 50;
@@ -99,6 +103,8 @@ export class GameState {
     // Generates player and enemy bullets
     add_bullet(player_bullet, x_origin = this.player.x, y_origin = this.player.y){
         if (player_bullet){
+            this.gameData.bullets_shot++;
+
             this.bullets.push({x: x_origin + 16, y: y_origin - 10, friendly: true});
         } else {
             this.bullets.push({x: x_origin + 16, y: y_origin + 42, friendly: false});
@@ -108,7 +114,6 @@ export class GameState {
 
     // For each enemy, small probability of firing a bullet
     generate_enemy_bullets(delta_seconds){
-        console.log(delta_seconds);
         for (let i = 0; i < this.enemies.length; i++){
             // Spawns evenly across frames thanks to delta seconds
             const shouldFire = Math.random() < this.enemy_position.chance * delta_seconds * 62;
@@ -268,6 +273,8 @@ export class GameState {
 
     // Kills the enemy at an index of the enemies list, then checks for win conditions
     kill_enemy(enemy_index){
+        this.gameData.enemies_killed++;
+
         let kill = this.enemies.splice(enemy_index, 1)[0];
         this.score += kill.score;
 
@@ -342,6 +349,8 @@ export class GameState {
 
     // Updates the player and enemies every game loop
     update(delta_seconds){
+        this.gameData.time_elapsed += delta_seconds;
+
         // When player is hit, small pause
         if (this.paused) {
             this.pauseTimer -= delta_seconds;

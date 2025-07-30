@@ -19,3 +19,5 @@ if (isset($_SESSION['user_id'], $_SESSION['token'], $_COOKIE['session_token'])) 
 }
 echo json_encode(['status' => 'error', 'message' => 'Not authenticated']);
 exit();
+
+?>

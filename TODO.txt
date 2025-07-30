@@ -6,18 +6,12 @@ when buttons clicked, pop-up window (dialog) to show them,   and displaying {}
 Guide {}
 
 Game interface {
-    add shield life interface
-    collisions (make sure bullet can only kill one enemy by continuing once enemy hit)
-    speed multiplier based on round, also more bullets, maybe enemy bullet speed up?
-    update max_enemy x, y, based on kills
-    shields
-    lives
-    death animation
+    add drops to make modifiers for the ship
+    create wave number and timeout between waves
+    better death animation
     explosions on impact
-    small stop on death
     random spawning ufo width score based on its speed (random)
     button to quit game (not saving score) - change start button to quit button when game active -- remove event listeners on keys
-    implement life lost animation
 } on game over {
     score (and save it)
     congratulations if new high score
@@ -29,9 +23,9 @@ aggiungere messaggio in mancato login/signup via serverside
 Clearare campi di login/input
 Controllare se poter accedere alla guida senza aver fatto login è un problema
 Reset enemy movement interval and enemy_moving
-Implement multiple rounds
-add bullet spawn chance when enemies decrease
+Need to update max score after each game
 
 keep track of bullets shot, enemies killed and game time in order to perform server side controls (su gpt, canvas restart issues)
-
+Could also cheat with infinite lives or by stopping collision check or stopping enemies....
+remove the user score that is inserted at signup and instead set score to 0 if user_id not found
 Riattivare autoupdate chrome

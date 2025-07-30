@@ -83,18 +83,59 @@ export class GameCanvas {
 
     // Displays GAME OVER data
     endGame(){
-        this.resetGame();
-
         document.getElementById("start-game").textContent = "Play a New Game";
-
+        
         this.ctx.fillStyle = "#00ffcc";
         this.ctx.font = "bold 70px 'Segoe UI', sans-serif";
         this.ctx.textAlign = "center";
-
+        
         this.ctx.fillText("GAME OVER", this.width / 2, this.height / 2);
-
+        
         this.ctx.font = "bold 40px 'Segoe UI', sans-serif";
-        this.ctx.fillText(`Final Score: ${this.gameState.score}`, this.width / 2, this.height / 2 + 100);
+        if (this.sendScore()){
+            this.ctx.fillText(`Final Score: ${this.gameState.score}`, this.width / 2, this.height / 2 + 100);
+        } else {
+            this.ctx.fillText(`An issue occured while uploading the score to the db`, this.width / 2, this.height / 2 + 100);
+        }
+
+        this.resetGame();
+    }
+
+
+    // Sends score to the server and returns false only if an error occured uploading it or if it was found suspicious
+    async sendScore(){
+        const score = this.gameState.score;
+        const gameData = this.gameState.gameData;
+
+        const payload = {score, gameData};
+
+        try {
+            const res = await fetch("../php/save_score.php", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(payload),
+            });
+
+            const resData = await res.json();
+            if (resData.status === "success"){
+
+                // If new personal best set, update best score without having to reload the page
+                if (resData.new_best){
+                    document.getElementById("high_score_h").textContent = "High Score: " + score;
+                }
+
+                return true;
+            } else {
+                alert("An unexpected error occured");
+                return false; 
+            }
+        } catch (error){
+            console.log(error);
+            alert("An unexpected error occured");
+            return false;
+        }
     }
 
 
@@ -123,8 +164,6 @@ export class GameCanvas {
         // Draws the player, flickering if just hit
         if (this.player_img.complete && (this.gameState.pauseTimer <= 0 || Math.floor(this.gameState.pauseTimer * 10) % 2 === 0)) {
             this.ctx.drawImage(this.player_img, player.x, player.y, 32, 32);
-        } else {
-            console.log("Couldn't load player");
         }
 
         // Draws the shields
