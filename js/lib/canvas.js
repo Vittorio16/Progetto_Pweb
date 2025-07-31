@@ -52,6 +52,8 @@ export class GameCanvas {
         window.removeEventListener("keyup", this.listenKeyup);
 
         this.gameState = null;
+        this.keys = {};
+        this.lastTime = 0;
 
         clearInterval(this.enemy_move_interval);
 
@@ -65,6 +67,7 @@ export class GameCanvas {
     // If game is active, it restarts it; otherwise it simply starts a new game
     toggleGame(){
         this.resetGame();
+
         document.getElementById("start-game").textContent = "Restart";
         document.getElementById("start-game").blur();
 
@@ -122,9 +125,7 @@ export class GameCanvas {
             if (resData.status === "success"){
 
                 // If new personal best set, update best score without having to reload the page
-                if (resData.new_best){
-                    document.getElementById("high_score_h").textContent = "High Score: " + score;
-                }
+                document.getElementById("high_score_h").textContent = "High Score: " + resData.high_score;
 
                 return true;
             } else {

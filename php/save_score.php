@@ -17,8 +17,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     if (isset($_SESSION['user_id'], $_SESSION['token'], $_COOKIE['session_token'])) {
         if (hash_equals($_SESSION['token'], $_COOKIE['session_token'])) {
-            $falsi = false;
 
+            $falsi = false;
             if ($falsi){
                 // TODO: security checks and check logged in
                 echo json_encode([
@@ -28,34 +28,33 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 exit();
             }
 
-            
+            $query = $conn->prepare("INSERT INTO user_scores (user_id, score) VALUES (?, ?)");
+            $query->bind_param("ii", $_SESSION["user_id"], $score);
+            $query->execute();
 
             $query = $conn->prepare("SELECT id, user_id, score, achieved_at FROM user_scores WHERE user_id=?");
             $query->bind_param("i", $_SESSION["user_id"]);
-
             $query->execute();
 
             $result = $query->get_result();
-            $new_best = false;
 
             // If there is a result, check to see which score is best
-            if ($result->num_rows > 0) {
-                // TODO - check to see if it's best score, and update everything accordingly
-            } else {
-                $query = $conn->prepare("INSERT INTO user_scores (user_id, score) VALUES (?, ?)");
-                $query->bind_param("ii", $_SESSION["user_id"], $score);
+            $high_score = 0;
+            $num_rows = 0;
 
-                $query->execute();
+            while($row = $result->fetch_assoc()) {
 
-                $new_best = true;
-                $_SESSION["high_score"] = $score;
+                if ($row["score"] >= $high_score) {
+                    $high_score = $row["score"];
+                }
             }
 
+            $_SESSION["high_score"] = $high_score;
 
             echo json_encode([
                 "status"=> "success",
                 "message"=> "Updated scores successfully",
-                "new_best"=> $new_best,
+                "high_score"=> $high_score,
             ]);
             exit();
         }

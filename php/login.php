@@ -68,7 +68,14 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $query->bind_param("i", $user["user_id"]);
             $query->execute();
 
-            $high_score = $query->get_result()->fetch_assoc()["score"] ?? 0;
+            $result = $query->get_result();
+
+            $high_score = 0;
+            while ($row = $result->fetch_assoc()) {
+                if ($row["score"] > $high_score) {
+                    $high_score = $row["score"];
+                }
+            }
             $_SESSION["high_score"] = $high_score;
 
             echo json_encode([

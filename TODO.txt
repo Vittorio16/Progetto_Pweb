@@ -12,6 +12,7 @@ Game interface {
     explosions on impact
     random spawning ufo width score based on its speed (random)
     button to quit game (not saving score) - change start button to quit button when game active -- remove event listeners on keys
+    change color of space ship
 } on game over {
     score (and save it)
     congratulations if new high score
@@ -22,10 +23,15 @@ Game interface {
 aggiungere messaggio in mancato login/signup via serverside
 Clearare campi di login/input
 Controllare se poter accedere alla guida senza aver fatto login è un problema
-Reset enemy movement interval and enemy_moving
 Need to update max score after each game
+Make session unique per user across different browsers
+Sistemare GAME OVER quando Login
 
 keep track of bullets shot, enemies killed and game time in order to perform server side controls (su gpt, canvas restart issues)
 Could also cheat with infinite lives or by stopping collision check or stopping enemies....
 remove the user score that is inserted at signup and instead set score to 0 if user_id not found
+forse audio output
+add exit button on the left on guid
+reset bullets between waves
+
 Riattivare autoupdate chrome

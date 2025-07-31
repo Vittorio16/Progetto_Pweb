@@ -16,7 +16,7 @@ export class GameState {
         this.bullet_speed = {friendly: 400, enemy: 100};
 
         this.score = 0;
-        this.lives = 1;
+        this.lives = 3;
 
         this.shields = [];
 
