@@ -4,7 +4,7 @@ export class GameState {
         this.paused = false;
         this.pauseTimer = 0;
 
-        this.gameData = {bullets_shot: 0, time_elapsed: 0, enemy_score_spawned: 0, enemies_killed: 0};
+        this.gameData = {bullets_shot: 0, time_elapsed: 0, enemy_score_spawned: 0, enemies_killed: 0, waves_cleared: 0};
 
         this.player = {x: canvas_width / 2 - 16, y: canvas_height - 52, width: 32, height: 32, speed: 200, direction: 0, shooting: false, reloading: false};
 
@@ -30,6 +30,8 @@ export class GameState {
 
 
     spawn_next_wave(){
+        this.gameData.waves_cleared++;
+
         this.enemy_scaling.starting_enemy_speed += 10;
         this.enemy_scaling.speed_multiplier += this.enemy_scaling.speed_multiplier / 2;
         this.enemy_scaling.projectile_chance = this.enemy_scaling.projectile_chance * 1.5;
@@ -37,6 +39,17 @@ export class GameState {
         this.enemy_position = {moving: false, direction: 1, next_dir: -1, current_displacement: 0, max_x: 0, min_x: 50, max_y: 0, speed: 50, chance: 0.0002};
 
         this.add_enemies();
+
+        this.player.x = this.max_x / 2 - 16;
+        this.player.y = this.max_y - 52;
+
+        this.paused = true;
+        this.pauseTimer = 1;
+        this.new_wave = true;
+
+        setTimeout(()=> {
+            this.new_wave = false;
+        }, 1000);
     }
 
 
@@ -257,7 +270,7 @@ export class GameState {
                 }
             }
         }
-        if (life_lost){
+        if (life_lost || this.new_wave){
             this.bullets = [];
         }
     }

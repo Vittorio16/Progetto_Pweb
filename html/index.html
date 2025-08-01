@@ -70,7 +70,7 @@
                 <button onclick="viewHistory()">Game History</button>
                 <button onclick="viewScoreboard()">Global Scoreboard</button>
                 <button onclick="window.location.href='guide.html'">Game Guide</button>
-                <button onclick="authContext.handleLogout(event)">Log Out</button>
+                <button id="logout-button" onclick="authContext.handleLogout(event)">Log Out</button>
             </nav>
 
             <div class="game-canvas-container">
@@ -82,6 +82,7 @@
             </div>
             <div class="centered-container">
                 <button id="start-game" onclick="gameCanvas.toggleGame()">Play a New Game</button>
+                <button id="quit-game" onclick="gameCanvas.quitGame()">Quit</button>
             </div>
         </div>
     </body>

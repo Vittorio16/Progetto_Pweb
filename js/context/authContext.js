@@ -39,6 +39,10 @@ export class AuthContext {
         this.loggedIn = loggedIn;
 
         if (loggedIn){
+            usernameInput.value = "";
+            emailInput.value = "";
+            passwordInput.value = "";
+
             userHomePage.displayProfile(user);
         }
     }
@@ -69,6 +73,9 @@ export class AuthContext {
         this.loggedIn = loggedIn;
 
         if (loggedIn){
+            usernameInput.value = "";
+            passwordInput.value = "";
+
             userHomePage.displayProfile(user);
         }
     }

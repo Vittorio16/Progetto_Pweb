@@ -43,6 +43,22 @@ export class GameCanvas {
         this.shield_img = new Image();
         this.shield_img.src = "../js/lib/images/shield.png";
         this.shield_img.onload = () => this.checkAllImagesLoaded();
+
+        document.getElementById("logout-button").addEventListener("click",() => this.quitGame);
+    }
+
+
+    // Quits the game when button pressed and on logout
+    quitGame(){
+        this.resetGame();
+
+        document.getElementById("start-game").textContent = "Play a New Game";
+        document.getElementById("quit-game").classList.add("hidden");
+
+        this.gameState = new GameState(this.width, this.height);
+
+        this.timestamp = 0;
+        this.drawGame();
     }
 
 
@@ -61,15 +77,17 @@ export class GameCanvas {
             cancelAnimationFrame(this.animationFrameId);
             this.animationFrameId = null;
         }
+
     }
-
-
+    
+    
     // If game is active, it restarts it; otherwise it simply starts a new game
     toggleGame(){
         this.resetGame();
-
+        
         document.getElementById("start-game").textContent = "Restart";
         document.getElementById("start-game").blur();
+        document.getElementById("quit-game").classList.remove("hidden");
 
         this.gameState = new GameState(this.width, this.height);
         this.timestamp = 0;
@@ -87,7 +105,8 @@ export class GameCanvas {
     // Displays GAME OVER data
     endGame(){
         document.getElementById("start-game").textContent = "Play a New Game";
-        
+        document.getElementById("quit-game").classList.add("hidden");
+
         this.ctx.fillStyle = "#00ffcc";
         this.ctx.font = "bold 70px 'Segoe UI', sans-serif";
         this.ctx.textAlign = "center";
@@ -113,7 +132,7 @@ export class GameCanvas {
         const payload = {score, gameData};
 
         try {
-            const res = await fetch("../php/save_score.php", {
+            const res = await fetch("../php/end_game.php", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -167,6 +186,15 @@ export class GameCanvas {
             this.ctx.drawImage(this.player_img, player.x, player.y, 32, 32);
         }
 
+        // New wave pop up
+        if (this.gameState.new_wave){
+            this.ctx.fillStyle = "#00ffcc";
+            this.ctx.font = "bold 70px 'Segoe UI', sans-serif";
+            this.ctx.textAlign = "center";
+            
+            this.ctx.fillText(`WAVE ${this.gameState.gameData.waves_cleared + 1}`, this.width / 2, this.height / 2);
+        }
+
         // Draws the shields
         const shields = this.gameState.shields;
         if (this.shield_img.complete){
@@ -201,6 +229,7 @@ export class GameCanvas {
             console.log("Couldn't load enemies");
         }
 
+        // Draws the bullets
         for (let i = 0; i < this.gameState.bullets.length; i++){
             this.ctx.beginPath();
             this.ctx.moveTo(this.gameState.bullets[i].x,  this.gameState.bullets[i].y);    
@@ -261,7 +290,7 @@ export class GameCanvas {
 
         this.lastTime = timestamp;
         if (!this.gameState.gameOver){
-            requestAnimationFrame(this.gameLoop.bind(this));
+            this.animationFrameId =  requestAnimationFrame(this.gameLoop.bind(this));
         } else {
             this.endGame();
         }

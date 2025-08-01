@@ -12,6 +12,7 @@ export class UserHomePage {
         username.textContent = user["username"];
 
         document.getElementById("high_score_h").textContent = "High Score: " + user["high_score"];
+        document.getElementById("quit-game").classList.add("hidden");
     }
     
     showLoginForm(){
@@ -32,6 +33,9 @@ export class UserHomePage {
     logout(){
         document.getElementById("user-home").classList.add("hidden");
         document.getElementById("sidebar").classList.add("hidden");
+
+        gameCanvas.quitGame();
+
         this.showSignupForm();
     }
 }

@@ -32,7 +32,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $query->bind_param("ii", $_SESSION["user_id"], $score);
             $query->execute();
 
-            $query = $conn->prepare("SELECT id, user_id, score, achieved_at FROM user_scores WHERE user_id=?");
+            $query = $conn->prepare("SELECT game_id, user_id, score, started_at, ended_at FROM user_scores WHERE user_id=?");
             $query->bind_param("i", $_SESSION["user_id"]);
             $query->execute();
 
