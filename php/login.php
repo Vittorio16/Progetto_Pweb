@@ -54,6 +54,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $_SESSION["token"] = $token;
             $_SESSION["username"] = $user["username"];
             $_SESSION["email"] = $user["email"];
+            $_SESSION["game_in_progress"] = false;
             
             setcookie("session_token", $token, [
                 'expires' => time() + 3600,

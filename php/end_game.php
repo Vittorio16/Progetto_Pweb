@@ -17,7 +17,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
     if (isset($_SESSION['user_id'], $_SESSION['token'], $_COOKIE['session_token'])) {
         if (hash_equals($_SESSION['token'], $_COOKIE['session_token'])) {
-
+            
+            if (!$_SESSION["game_id"]){
+                echo json_encode(["status" => "error","message"=> "Game not in progress"]);
+                exit();
+            }
             $falsi = false;
             if ($falsi){
                 // TODO: security checks and check logged in
@@ -50,6 +54,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             }
 
             $_SESSION["high_score"] = $high_score;
+            $_SESSION["game_in_progress"] = false;
+            $_SESSION["game_id"] = null;
 
             echo json_encode([
                 "status"=> "success",

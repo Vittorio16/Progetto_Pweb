@@ -30,6 +30,7 @@ Need to save starting datetime on save_score.php
 forse audio output
 add exit button on the left on guid
 reset bullets between waves
+Could do game statistics
 
 Riattivare autoupdate chrome
 
