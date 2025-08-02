@@ -1,5 +1,7 @@
 export class GameState {
     constructor(canvas_width, canvas_height){
+
+        this.gameId = null;
         this.gameOver = false;
         this.paused = false;
         this.pauseTimer = 0;
@@ -26,6 +28,30 @@ export class GameState {
         // Populate the enemies and shields arrays
         this.add_enemies();
         this.add_shields();
+    }
+
+
+    async update_game_progress(event_type){
+        const gameId = this.gameId;
+        const payload = {gameId, event_type};
+
+        try {
+            console.log(event_type);
+            const res = await fetch("../php/update_game_progress.php", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(payload),
+            });
+
+            const resData = await res.json();
+            if (resData.status != "success"){
+                alert("An unexpected error occured while uploading game data");
+            }
+        } catch (error){
+            alert("An unexpected error occured while uploading game data");
+        }
     }
 
 
@@ -115,7 +141,9 @@ export class GameState {
 
     // Generates player and enemy bullets
     add_bullet(player_bullet, x_origin = this.player.x, y_origin = this.player.y){
+        
         if (player_bullet){
+            this.update_game_progress("BULLET_FIRED");
             this.gameData.bullets_shot++;
 
             this.bullets.push({x: x_origin + 16, y: y_origin - 10, friendly: true});
@@ -287,6 +315,7 @@ export class GameState {
     // Kills the enemy at an index of the enemies list, then checks for win conditions
     kill_enemy(enemy_index){
         this.gameData.enemies_killed++;
+        this.update_game_progress("ENEMY_KILL");
 
         let kill = this.enemies.splice(enemy_index, 1)[0];
         this.score += kill.score;
@@ -349,8 +378,10 @@ export class GameState {
     // Makes the player lose a life and checks for lose condition
     removeLife(){
         this.lives--;
+        this.update_game_progress("PLAYER_HIT");
 
         if (this.lives === 0){
+            this.update_game_progress("GAME_END");
             this.gameOver = true;
             return;
         }

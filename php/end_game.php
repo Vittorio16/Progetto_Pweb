@@ -18,7 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if (isset($_SESSION['user_id'], $_SESSION['token'], $_COOKIE['session_token'])) {
         if (hash_equals($_SESSION['token'], $_COOKIE['session_token'])) {
             
-            if (!$_SESSION["game_id"]){
+            if (!$_SESSION["game_in_progress"]){
                 echo json_encode(["status" => "error","message"=> "Game not in progress"]);
                 exit();
             }
@@ -54,9 +54,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             }
 
             $_SESSION["high_score"] = $high_score;
-            $_SESSION["game_in_progress"] = false;
             $_SESSION["game_id"] = null;
-
+            $_SESSION["game_in_progress"] = false;
+            
             echo json_encode([
                 "status"=> "success",
                 "message"=> "Updated scores successfully",

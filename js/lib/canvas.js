@@ -69,7 +69,6 @@ export class GameCanvas {
         window.removeEventListener("keyup", this.listenKeyup);
 
         this.gameState = null;
-        this.gameId = null;
         this.keys = {};
         this.lastTime = 0;
 
@@ -86,6 +85,7 @@ export class GameCanvas {
     // If game is active, it restarts it; otherwise it simply starts a new game
     async toggleGame(){
         this.resetGame();
+        this.gameState = new GameState(this.width, this.height);
         
         // Tells the server to start a new game (only possible if the user doesn't have other games active)
         try {
@@ -99,13 +99,12 @@ export class GameCanvas {
             const resData = await res.json();
             if (resData.status === "success"){
                 // If game added to db succesfully, save the game id
-                this.gameId = resData.gameId;
+                this.gameState.gameId = resData.game_id;
 
             } else {
                 alert("An unexpected error occured while starting the game");
             }
         } catch (error){
-            console.log(error);
             alert("An unexpected error occured while starting the game");
         }
 
@@ -113,12 +112,10 @@ export class GameCanvas {
         document.getElementById("start-game").blur();
         document.getElementById("quit-game").classList.remove("hidden");
 
-        this.gameState = new GameState(this.width, this.height);
         this.timestamp = 0;
 
         window.addEventListener("keydown", this.listenKeydown);
         window.addEventListener("keyup", this.listenKeyup);
-
 
         this.enemy_movement_loop();
 
@@ -172,7 +169,7 @@ export class GameCanvas {
 
                 return true;
             } else {
-                alert("An unexpected error occured 1");
+                alert("An unexpected error occured");
                 return false; 
             }
         } catch (error){

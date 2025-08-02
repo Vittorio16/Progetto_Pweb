@@ -36,7 +36,3 @@ Riattivare autoupdate chrome
 
 
 Fatto:
-Clearare campi di login/input
-Sistemato GAME OVER quando Login
-button to quit game (not saving score) - change start button to quit button when game active -- remove event listeners on keys
-create wave number and timeout between waves

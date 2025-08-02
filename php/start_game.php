@@ -12,15 +12,24 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if (isset($_SESSION['user_id'], $_SESSION['token'], $_COOKIE['session_token'])) {
         if (hash_equals($_SESSION['token'], $_COOKIE['session_token'])) {
 
-            // If a game is already in progress, can't start another one
-            if ($_SESSION["game_in_progress"]){
-                echo json_encode(['status' => 'error', 'message' => 'Game already in progress']);
-                exit();
-            }
+            // If a game is already in progress, it just starts another one
 
-            // Returns a game id
-            $_SESSION["game_id"] = 1;
-            echo json_encode(['status'=> 'success', 'game_id'=> null]);
+            // Returns a game id -- different than the one saved in the user scores db after game finishes
+            // Used to authenticate input
+            $query = $conn->prepare('SELECT MAX(game_id) AS max_id FROM game_events');
+            $query->execute();
+            $result = $query->get_result();
+            $row = $result->fetch_assoc();
+
+            $_SESSION["game_id"] = ($row["max_id"] ?? 0) + 1;
+            $_SESSION["game_in_progress"] = true;
+
+            $event_type = "GAME_START";
+            $query = $conn->prepare("INSERT INTO game_events (game_id, user_id, event_type) VALUES (?,?,?)");
+            $query->bind_param( "iis", $_SESSION["game_id"], $_SESSION["user_id"], $event_type);
+            $query->execute();
+
+            echo json_encode(['status'=> 'success', 'game_id'=> $_SESSION["game_id"]]);
             exit();
         }
     }
