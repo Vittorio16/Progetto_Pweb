@@ -1,3 +1,5 @@
+import { apiContext } from "../globals.js";
+
 export class AuthContext {
     constructor(){
         this.user = null;
@@ -81,8 +83,40 @@ export class AuthContext {
     }
 
 
-    async handleLogout(event){
-        event.preventDefault();
+    async handleViewHistory(){
+        const gameHistory = await apiContext.viewHistory();
+        const dia = document.getElementById("game-history");
+        const games_list = document.getElementById("game-history-list");
+
+        games_list.innerHTML = "";
+
+        if (!gameHistory || gameHistory.length === 0){
+            games_list.innerHTML = "<p>No games found.</p>";
+        } else {
+            for (let i = 0; i < gameHistory.length; i++){
+                const game = gameHistory[i];
+                const el = document.createElement("div");
+                games_list.appendChild(el);
+
+                el.innerHTML = `
+                    <div>
+                        <strong>Score:</strong> ${game.score}
+                        <br>
+                        <small>${game.ended_at}</small>
+                    </div>
+                `; 
+            }
+        }
+
+        dia.showModal();
+    }
+
+
+    async handleViewScoreboard(){
+    }
+
+
+    async handleLogout(){
 
         const {user, token, loggedIn} = await apiContext.logout();
 

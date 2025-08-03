@@ -137,4 +137,22 @@ export class ApiContext {
             }
         }
     }
+
+    async viewHistory(){
+        try {
+            const res = await fetch("../php/get_history.php", {
+                method: "POST",
+                credentials: "include"
+            });
+
+            const data = await res.json();
+            if (data.status === "success"){
+                return data.games;
+            } else {
+                return null;
+            }
+        } catch(error){
+            return null;
+        }
+    }
 }

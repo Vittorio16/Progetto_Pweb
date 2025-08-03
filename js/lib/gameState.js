@@ -36,19 +36,13 @@ export class GameState {
         const payload = {gameId, event_type};
 
         try {
-            console.log(event_type);
-            const res = await fetch("../php/update_game_progress.php", {
+            await fetch("../php/update_game_progress.php", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify(payload),
             });
-
-            const resData = await res.json();
-            if (resData.status != "success"){
-                alert("An unexpected error occured while uploading game data");
-            }
         } catch (error){
             alert("An unexpected error occured while uploading game data");
         }
