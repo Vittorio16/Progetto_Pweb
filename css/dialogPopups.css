@@ -14,7 +14,8 @@
     color: #e0e0e0;
     box-shadow: 0 0 20px #00ffcc33;
     text-align: center;
-    overflow: hidden;
+
+    overflow-y: auto;
 }
 
 .centered-dialog::backdrop {
@@ -25,7 +26,7 @@
     max-height: 50vh;
     overflow-y: auto;
     margin-top: 1rem;
-    padding-right: 0.5rem; /* prevent scrollbar overlay */
+    padding-right: 0.5rem;
     text-align: left;
 }
 
@@ -43,7 +44,15 @@
     background: #1f1f1f;
 }
 
-.centered-dialog > h2{
+.centered-dialog > h1 {
     color: #00ffcc;
+    margin-top: 0;
+}
 
+.centered-dialog form {
+    margin-top: 1rem;
+    position: sticky;
+    bottom: 0;
+    background: #1a1a1a;
+    padding: 1rem 0 0;
 }
