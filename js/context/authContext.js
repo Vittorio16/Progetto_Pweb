@@ -91,7 +91,11 @@ export class AuthContext {
         games_list.innerHTML = "";
 
         if (!gameHistory || gameHistory.length === 0){
-            games_list.innerHTML = "<p>No games found.</p>";
+            games_list.innerHTML = `
+                <div style="text-align: center; padding: 2rem;">
+                    <h2 style="font-size: 1.8rem;">No games found</h2>
+                </div>
+            `;
         } else {
             for (let i = 0; i < gameHistory.length; i++){
                 const game = gameHistory[i];
