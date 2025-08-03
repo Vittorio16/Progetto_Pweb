@@ -169,6 +169,7 @@ export class GameCanvas {
 
                 return true;
             } else {
+                alert(resData.message);
                 alert("An unexpected error occured");
                 return false; 
             }

@@ -18,6 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if (isset($_SESSION['user_id'], $_SESSION['token'], $_COOKIE['session_token'])) {
         if (hash_equals($_SESSION['token'], $_COOKIE['session_token'])) {
             
+
             if (!$_SESSION["game_in_progress"]){
                 echo json_encode(["status" => "error","message"=> "Game not in progress"]);
                 exit();
@@ -32,11 +33,11 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
                 exit();
             }
 
-            $query = $conn->prepare("INSERT INTO user_scores (user_id, score) VALUES (?, ?)");
-            $query->bind_param("ii", $_SESSION["user_id"], $score);
+            $query = $conn->prepare("INSERT INTO user_scores (user_id, score, bullets_shot, enemies_killed) VALUES (?,?,?,?)");
+            $query->bind_param("iiii", $_SESSION["user_id"], $score, $gameData["bullets_shot"], $gameData["enemies_killed"]);
             $query->execute();
 
-            $query = $conn->prepare("SELECT game_id, user_id, score, started_at, ended_at FROM user_scores WHERE user_id=?");
+            $query = $conn->prepare("SELECT game_id, user_id, score, ended_at FROM user_scores WHERE user_id=?");
             $query->bind_param("i", $_SESSION["user_id"]);
             $query->execute();
 

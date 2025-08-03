@@ -99,16 +99,21 @@ export class AuthContext {
         } else {
             for (let i = 0; i < gameHistory.length; i++){
                 const game = gameHistory[i];
+
                 const el = document.createElement("div");
                 games_list.appendChild(el);
+                el.classList.add("game-entry");
 
                 el.innerHTML = `
-                    <div>
-                        <strong>Score:</strong> ${game.score}
-                        <br>
-                        <small>${game.ended_at}</small>
+                    <div class="entry-left">
+                        <div class="score">Score: ${game.score}</div>
+                        <div class="time">Achieved at: ${new Date(game.ended_at).toLocaleString()}</div>
                     </div>
-                `; 
+                    <div class="entry-right">
+                        <div class="bullets">Bullets shot: ${game.bullets_shot}</div>
+                        <div class="enemies">Enemies killed: ${game.enemies_killed}</div>
+                    </div>
+                `;
             }
         }
 

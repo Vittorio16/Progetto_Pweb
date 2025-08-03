@@ -21,6 +21,7 @@ aggiungere messaggio in mancato login/signup via serverside
 Controllare se poter accedere alla guida senza aver fatto login è un problema
 Make session unique per user across different browsers
 cambiare animazione giocatore tra nuova wave e vita persa? 
+ordinare scores in ordine cronologico/di high score
 
 keep track of bullets shot, enemies killed and game time in order to perform server side controls (su gpt, canvas restart issues)
 Could also cheat with infinite lives or by stopping collision check or stopping enemies or infinite lives....
