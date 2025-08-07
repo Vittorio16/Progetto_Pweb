@@ -25,6 +25,10 @@ export class GameCanvas {
 
         this.gameState = new GameState(width, height);
 
+        this.ufo_img = new Image();
+        this.ufo_img.src = "../js/lib/images/ufo.png";
+        this.ufo_img.onload = () => this.checkAllImagesLoaded();
+
         this.top_enemy_img = new Image();
         this.top_enemy_img.src = "../js/lib/images/top_enemy.png";
         this.top_enemy_img.onload = () => this.checkAllImagesLoaded();
@@ -184,7 +188,7 @@ export class GameCanvas {
     // Makes sure all pngs are loaded before trying to draw the board
     checkAllImagesLoaded(){
         this.imagesLoaded++;
-        if (this.imagesLoaded === 5){
+        if (this.imagesLoaded === 6){
             this.drawGame();
         }
     }
@@ -250,6 +254,14 @@ export class GameCanvas {
         } else {
             console.log("Couldn't load enemies");
         }
+
+
+        // Draws the ufo, if present
+        if (this.ufo_img.complete && this.gameState.ufo.present){
+            const ufo = this.gameState.ufo;
+            this.ctx.drawImage(this.ufo_img, ufo.x, ufo.y, 40, 20);
+        }
+
 
         // Draws the bullets
         for (let i = 0; i < this.gameState.bullets.length; i++){

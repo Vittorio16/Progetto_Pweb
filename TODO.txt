@@ -1,9 +1,3 @@
-Create index with user signup, login (with hiding functions in js)
-
-Create home page, with buttons for {}
-when buttons clicked, pop-up window (dialog) to show them,   and displaying {}
-
-Guide {}
 
 Game interface {
     add drops to make modifiers for the ship
@@ -20,18 +14,17 @@ Game interface {
 aggiungere messaggio in mancato login/signup via serverside
 Controllare se poter accedere alla guida senza aver fatto login è un problema
 Make session unique per user across different browsers
-cambiare animazione giocatore tra nuova wave e vita persa? 
+cambiare animazione giocatore tra nuova wave e vita persa?
 ordinare scores in ordine cronologico/di high score
 
 keep track of bullets shot, enemies killed and game time in order to perform server side controls (su gpt, canvas restart issues)
 Could also cheat with infinite lives or by stopping collision check or stopping enemies or infinite lives....
 Tie a game with game id, and don't save data if multiple games are in progress (so if timestamp is less than current time)
 Need to save starting datetime on save_score.php
+Tell player that faster ufos are worth more
+If user passes into update_game_data not enum values, program crashes
 
-forse audio output
-add exit button on the left on guid
-reset bullets between waves
-Could do game statistics
+add exit button on the left on guide
 
 Riattivare autoupdate chrome
 

@@ -10,6 +10,8 @@ export class GameState {
 
         this.player = {x: canvas_width / 2 - 16, y: canvas_height - 52, width: 32, height: 32, speed: 200, direction: 0, shooting: false, reloading: false};
 
+        this.ufo = {present: false, x: 0, y: 60, width: 40, height: 20, speed: 0, score: 0, spawn_probability: 0.003};
+
         this.enemies = []; 
         this.enemy_scaling = {speed_multiplier: 1 /50, projectile_chance: 0.0002, starting_enemy_speed: 50};
         this.enemy_position = {moving: false, direction: 1, next_dir: -1, current_displacement: 0, max_x: 0, min_x: 50, max_y: 0, speed: 50, chance: 0.0002};
@@ -112,6 +114,26 @@ export class GameState {
 
             current_x = 50;
             current_y += (this.max_y - 320) / num_rows;
+        }
+    }
+
+
+    // Randomly spawns a ufo, if not already present
+    add_ufo(delta_seconds){
+        const should_spawn = Math.random() < this.ufo.spawn_probability * delta_seconds * 62;
+
+        if (!this.ufo.present && should_spawn){
+            this.ufo.present = true;
+            
+            this.ufo.speed = Math.round(Math.random() * 400);
+            if (this.ufo.speed < 100){
+                this.ufo.speed = 100;
+            }
+
+            this.ufo.score = Math.round(this.ufo.speed / 5);
+            
+            this.ufo.x = -40;
+            console.log(this.ufo.score, this.ufo.speed);
         }
     }
 
@@ -223,6 +245,17 @@ export class GameState {
     }
 
 
+    // If present, moves the ufo, until it disappears off the screen
+    move_ufo(delta_seconds){
+        const delta_x = this.ufo.speed * delta_seconds;
+        this.ufo.x += delta_x;
+
+        if (this.ufo.x > this.max_x){
+            this.ufo.present = false;
+        }
+    }
+
+
     // Moves enemy bullets down and player bullets up
     move_bullets(delta_seconds){
         for (let i = this.bullets.length - 1; i >= 0; i--){
@@ -272,16 +305,30 @@ export class GameState {
 
             if (shield_hit) continue;
 
-            // Bullet is friendly, check collisions with enemy
+            // Bullet is friendly, check collisions with enemies and ufo
             if (bullet.friendly){
+                let enemy_hit = false;
+
                 for (let j = this.enemies.length - 1; j >= 0; j--){
                     const enemy = this.enemies[j];
 
+                    // enemy hit
                     if (bullet.x >= enemy.x && bullet.x <= enemy.x + 32 && bullet.y >= enemy.y && bullet.y <= enemy.y + 32){
                         this.kill_enemy(j);
+                        enemy_hit = true;
                         this.bullets.splice(i, 1);
+
                         break;
                     }
+                }
+                if (enemy_hit){
+                    continue;
+                }
+                
+                // ufo hit
+                if (bullet.x >= this.ufo.x && bullet.x <= this.ufo.x + 40 && bullet.y >= this.ufo.y && bullet.y <= this.ufo.y + 20){
+                    this.kill_ufo();
+                    this.bullets.splice(i, 1);
                 }
             } else {
                 // Bullet is enemy, check collisions with player
@@ -359,6 +406,16 @@ export class GameState {
     }
 
 
+    // Destroys the ufo
+    kill_ufo(){
+        this.gameData.enemies_killed++;
+        this.update_game_progress("ENEMY_KILL");
+
+        this.score += this.ufo.score;
+        this.ufo.present = false;
+    }
+
+
     // Makes the shield lose a life
     lose_shield(index){
         this.shields[index].lives--;
@@ -399,6 +456,7 @@ export class GameState {
         }
 
         this.generate_enemy_bullets(delta_seconds);
+        this.add_ufo(delta_seconds);
 
         this.movePlayer(delta_seconds);
 
@@ -410,6 +468,11 @@ export class GameState {
             } else if (this.enemy_position.direction === 0){
                 this.move_enemies_vertical(delta_seconds);
             }
+        }
+
+        // Moves the ufo, if present
+        if (this.ufo.present){
+            this.move_ufo(delta_seconds);
         }
 
         this.move_bullets(delta_seconds);
