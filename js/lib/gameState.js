@@ -133,7 +133,6 @@ export class GameState {
             this.ufo.score = Math.round(this.ufo.speed / 5);
             
             this.ufo.x = -40;
-            console.log(this.ufo.score, this.ufo.speed);
         }
     }
 

@@ -133,6 +133,41 @@ export class AuthContext {
 
 
     async handleViewScoreboard(){
+        const scoreboard = await apiContext.viewScoreboard();
+        const dia = document.getElementById("scoreboard");
+        const games_list = document.getElementById("scoreboard-list");
+
+        games_list.innerHTML = "";
+
+        if (!scoreboard || scoreboard.length === 0){
+            games_list.innerHTML = `
+                <div style="text-align: center; padding: 2rem;">
+                    <h2 style="font-size: 1.8rem;">No games found</h2>
+                </div>
+            `;
+        } else {
+            for (let i = 0; i < scoreboard.length; i++){
+                const game = scoreboard[i];
+
+                const el = document.createElement("div");
+                games_list.appendChild(el);
+                el.classList.add("game-entry");
+
+                el.innerHTML = `
+                    <div class="entry-left">
+                    <div class="score">Player: ${game.username}</div>
+                    <div class="score">Score: ${game.score}</div>
+                    <div class="time">Achieved at: ${new Date(game.ended_at).toLocaleString()}</div>
+                    </div>
+                    <div class="entry-right">
+                        <div class="bullets">Bullets shot: ${game.bullets_shot}</div>
+                        <div class="enemies">Enemies killed: ${game.enemies_killed}</div>
+                    </div>
+                `;
+            }
+        }
+
+        dia.showModal();
     }
 
 

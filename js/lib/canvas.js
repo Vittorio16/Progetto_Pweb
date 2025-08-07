@@ -167,7 +167,7 @@ export class GameCanvas {
 
             const resData = await res.json();
             if (resData.status === "success"){
-
+                console.log(resData.message);
                 // If new personal best set, update best score without having to reload the page
                 document.getElementById("high_score_h").textContent = "High Score: " + resData.high_score;
 

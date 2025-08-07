@@ -155,4 +155,24 @@ export class ApiContext {
             return null;
         }
     }
+
+
+    async viewScoreboard(){
+        try {
+            const res = await fetch("../php/get_scoreboard.php", {
+                method: "POST",
+                credentials: "include"
+            });
+
+            const data = await res.json();
+            if (data.status === "success"){
+                console.log(data.games);
+                return data.games;
+            } else {
+                return null;
+            }
+        } catch(error){
+            return null;
+        }
+    }
 }

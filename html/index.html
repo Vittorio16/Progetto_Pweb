@@ -86,7 +86,7 @@
             </div>
 
             <dialog id="game-history" class="centered-dialog">
-                <h1>Game History</h2>
+                <h1>Game History</h1>
                 <div class="sort-select-wrapper">
                     <label for="sort-select">Sort by:</label>
                     <select id="sort-select">
@@ -95,6 +95,14 @@
                     </select>
                 </div>
                 <div id="game-history-list"></div>
+                <form method="dialog">
+                    <button>Close</button>
+                </form>
+            </dialog>
+
+            <dialog id="scoreboard" class="centered-dialog">
+                <h1>Scoreboard</h1>
+                <div id="scoreboard-list"></div>
                 <form method="dialog">
                     <button>Close</button>
                 </form>

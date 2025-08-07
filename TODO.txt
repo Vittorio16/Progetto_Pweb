@@ -15,7 +15,7 @@ Controllare se poter accedere alla guida senza aver fatto login è un problema
 Make session unique per user across different browsers
 cambiare animazione giocatore tra nuova wave e vita persa?
 ordinare scores in ordine cronologico/di high score
-
+Unfocus all buttons after clickig (so that pressing space doesn't reclick them)
 keep track of bullets shot, enemies killed and game time in order to perform server side controls (su gpt, canvas restart issues)
 Could also cheat with infinite lives or by stopping collision check or stopping enemies or infinite lives....
 Tie a game with game id, and don't save data if multiple games are in progress (so if timestamp is less than current time)
@@ -24,6 +24,7 @@ Tell player that faster ufos are worth more
 If user passes into update_game_data not enum values, program crashes
 Check if handlers are all right with content maybe not loaded
 add exit button on the left on guide
+Quando play game chiudi sidebar
 
 Riattivare autoupdate chrome
 
