@@ -25,6 +25,9 @@ If user passes into update_game_data not enum values, program crashes
 Check if handlers are all right with content maybe not loaded
 add exit button on the left on guide
 Quando play game chiudi sidebar
+Add waves to statistics
+Fix schermo che scorre con spacebar
+Check what happens when screen shrinks vertically
 
 Riattivare autoupdate chrome
 
