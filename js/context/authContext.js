@@ -87,8 +87,14 @@ export class AuthContext {
         const gameHistory = await apiContext.viewHistory();
         const dia = document.getElementById("game-history");
         const games_list = document.getElementById("game-history-list");
+        const sorting_option = document.getElementById("sort-select");
 
         games_list.innerHTML = "";
+
+        const savedSort = localStorage.getItem("gameHistorySort");
+        if (savedSort) {
+            sorting_option.value = savedSort;
+        }
 
         if (!gameHistory || gameHistory.length === 0){
             games_list.innerHTML = `
@@ -97,6 +103,11 @@ export class AuthContext {
                 </div>
             `;
         } else {
+            // Sort the game history before rendering it
+            if (sorting_option.value === "score"){
+                gameHistory.sort((a, b) => b.score - a.score);
+            }
+
             for (let i = 0; i < gameHistory.length; i++){
                 const game = gameHistory[i];
 

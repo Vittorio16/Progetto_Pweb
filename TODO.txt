@@ -3,7 +3,6 @@ Game interface {
     add drops to make modifiers for the ship
     better death animation
     explosions on impact
-    random spawning ufo width score based on its speed (random)
     change color of space ship
 } on game over {
     congratulations if new high score
@@ -23,7 +22,7 @@ Tie a game with game id, and don't save data if multiple games are in progress (
 Need to save starting datetime on save_score.php
 Tell player that faster ufos are worth more
 If user passes into update_game_data not enum values, program crashes
-
+Check if handlers are all right with content maybe not loaded
 add exit button on the left on guide
 
 Riattivare autoupdate chrome

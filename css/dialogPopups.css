@@ -102,3 +102,38 @@
     flex-direction: column;
     gap: 0.2rem;
 }
+
+.sort-select-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.75rem;
+    margin: 1rem auto;
+    font-size: 1rem;
+    color: #e0e0e0;
+    line-height: 1;
+}
+
+.sort-select-wrapper label {
+    font-weight: 500;
+    color: #00ffcc;
+    font-size: 1rem;
+    margin: 0;
+    padding: 0.5rem 0;
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+#sort-select {
+    padding: 0.5rem 1rem;
+    border: 1px solid #444;
+    border-radius: 6px;
+    background: #111;
+    color: #eee;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: border 0.2s ease, box-shadow 0.2s ease;
+    height: 2.4rem; /* consistent height */
+    line-height: 1.2;
+}

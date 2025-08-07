@@ -87,6 +87,13 @@
 
             <dialog id="game-history" class="centered-dialog">
                 <h1>Game History</h2>
+                <div class="sort-select-wrapper">
+                    <label for="sort-select">Sort by:</label>
+                    <select id="sort-select">
+                        <option value="date">Date</option>
+                        <option value="score">Score</option>
+                    </select>
+                </div>
                 <div id="game-history-list"></div>
                 <form method="dialog">
                     <button>Close</button>
