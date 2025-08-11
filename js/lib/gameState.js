@@ -9,7 +9,8 @@ export class GameState {
         this.gameData = {bullets_shot: 0, time_elapsed: 0, enemy_score_spawned: 0, enemies_killed: 0, waves_cleared: 0, enemy_displacement: 0};
 
         this.player = {x: canvas_width / 2 - 16, y: canvas_height - 52, width: 32, height: 32, speed: 200, direction: 0, 
-                        shooting: false, reloading: false, reload_time: 500};
+                        shooting: false, reloading: false, reload_time: 500,
+                        power_ups: {}};
 
         this.ufo = {present: false, x: 0, y: 60, width: 40, height: 20, speed: 0, score: 0, spawn_probability: 0.003};
 
@@ -24,6 +25,9 @@ export class GameState {
         this.lives = 1;
 
         this.shields = [];
+
+        this.power_up_data = {width: 16, height: 16, speed: 60, type: ["2x", "invulnerability", "rapid_fire"], duration: 15, spawn_probability: 0.03};
+        this.active_drops = [];
 
         this.max_x = canvas_width;
         this.max_y = canvas_height;
@@ -52,6 +56,7 @@ export class GameState {
     }
 
 
+    // Spawns the next wave of enemies
     spawn_next_wave(){
         this.gameData.waves_cleared++;
 
@@ -138,6 +143,22 @@ export class GameState {
     }
 
 
+    // Randomly spawns power ups at the top of the screen
+    add_drop(delta_seconds){
+        const should_spawn = Math.random() < this.power_up_data.spawn_probability * delta_seconds * 62;
+
+        if (should_spawn){
+            const curr_type = this.power_up_data.type[Math.floor(Math.random() * this.power_up_data.type.length)];
+            let curr_x = Math.floor(Math.random() * this.max_x);
+
+            if (curr_x + this.power_up_data.width > this.max_x){
+                curr_x = this.max_x - this.power_up_data.width;
+            }
+
+            this.active_drops.push({x: curr_x, y: 0, type: curr_type});
+        }
+    }
+
     // Each shield is 64x64
     add_shields(){
         for (let i = 0; i < 4; i++){
@@ -196,6 +217,12 @@ export class GameState {
             this.add_bullet(true);
             this.player.reloading = true;
 
+            if (this.player.power_ups["rapid_fire"]){
+                this.player.reload_time = 200;
+            } else {
+                this.player.reload_time = 500;
+            }
+            console.log(this.player.reload_time);
             setTimeout(() => {
                 this.player.reloading = false;
             }, this.player.reload_time);
@@ -253,6 +280,20 @@ export class GameState {
 
         if (this.ufo.x > this.max_x){
             this.ufo.present = false;
+        }
+    }
+
+
+    // Moves the power ups vertically, and deletes them if they are off the screen
+    move_drops(delta_seconds){
+        const delta_y = this.power_up_data.speed * delta_seconds;
+
+        for (let i = this.active_drops.length - 1; i >= 0; i--){
+            if (this.active_drops[i].y + delta_y > this.max_y){
+                this.active_drops.splice(i, 1);
+            } else {
+                this.active_drops[i].y += delta_y;
+            }
         }
     }
 
@@ -342,6 +383,24 @@ export class GameState {
         }
         if (life_lost || this.new_wave){
             this.bullets = [];
+            this.active_drops = [];
+        }
+    }
+
+
+    // Checks if player is collecting a drop
+    check_drop_collision(){
+        for (let i = this.active_drops.length - 1; i >= 0; i--){
+            const drop = this.active_drops[i];
+            if (drop.x >= this.player.x && drop.x <= this.player.x + 32 && drop.y >= this.player.y && drop.y <= this.player.y + 32){
+                if (this.player.power_ups[drop.type] || this.player.power_ups[drop.type] === 0){
+                    this.player.power_ups[drop.type] += this.power_up_data.duration;
+                } else {
+                    this.player.power_ups[drop.type] = this.power_up_data.duration;
+                }
+                console.log(this.player.power_ups);
+                this.active_drops.splice(i, 1);
+            }
         }
     }
 
@@ -444,6 +503,19 @@ export class GameState {
     }
 
 
+    // Updates remaining type on active drops
+    update_active_drops(delta_seconds){
+        for (let drop of this.power_up_data.type){
+            if (this.player.power_ups[drop]){
+                this.player.power_ups[drop] -= delta_seconds;
+
+                if (this.player.power_ups[drop] <= 0){
+                    delete this.player.power_ups[drop];
+                }
+            }
+        }
+    }
+
     // Updates the player and enemies every game loop
     update(delta_seconds){
         this.gameData.time_elapsed += delta_seconds;
@@ -459,8 +531,10 @@ export class GameState {
 
         this.generate_enemy_bullets(delta_seconds);
         this.add_ufo(delta_seconds);
+        this.add_drop(delta_seconds);
 
         this.movePlayer(delta_seconds);
+        this.move_drops(delta_seconds);
 
         // Decides where to move enemies
         if (this.enemy_position.moving){
@@ -480,6 +554,10 @@ export class GameState {
         this.move_bullets(delta_seconds);
 
         this.check_collisions();
+        this.check_drop_collision();
+
+        this.update_active_drops(delta_seconds);
+
         this.check_enemies_bottom();
     }
 }

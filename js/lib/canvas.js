@@ -49,6 +49,18 @@ export class GameCanvas {
         this.shield_img.src = "../js/lib/images/shield.png";
         this.shield_img.onload = () => this.checkAllImagesLoaded();
 
+        this.x2_img = new Image();
+        this.x2_img.src = "../js/lib/images/power_up_2x.png";
+        this.x2_img.onload = () => this.checkAllImagesLoaded();
+
+        this.rf_img = new Image();
+        this.rf_img.src = "../js/lib/images/power_up_rf.png";
+        this.rf_img.onload = () => this.checkAllImagesLoaded();
+
+        this.inv_img = new Image();
+        this.inv_img.src = "../js/lib/images/power_up_inv.png";
+        this.inv_img.onload = () => this.checkAllImagesLoaded();
+
         document.getElementById("logout-button").addEventListener("click",() => this.quitGame);
     }
 
@@ -91,7 +103,7 @@ export class GameCanvas {
         this.resetGame();
         this.gameState = new GameState(this.width, this.height);
         document.getElementById("sidebar").classList.add("hidden");
-        
+
         // Tells the server to start a new game (only possible if the user doesn't have other games active)
         try {
             const res = await fetch("../php/start_game.php", {
@@ -187,7 +199,7 @@ export class GameCanvas {
     // Makes sure all pngs are loaded before trying to draw the board
     checkAllImagesLoaded(){
         this.imagesLoaded++;
-        if (this.imagesLoaded === 6){
+        if (this.imagesLoaded === 9){
             this.drawGame();
         }
     }
@@ -274,6 +286,23 @@ export class GameCanvas {
             this.ctx.strokeStyle = 'red'; 
             this.ctx.lineWidth = 2;       
             this.ctx.stroke();
+        }
+
+        // Draws the power ups
+        if (this.x2_img.complete && this.rf_img.complete && this.inv_img.complete){
+            for (let i = 0; i < this.gameState.active_drops.length; i++){
+                let current;
+    
+                if (this.gameState.active_drops[i].type === "2x"){
+                    current = this.x2_img;
+                } else if (this.gameState.active_drops[i].type === "invulnerability"){
+                    current = this.inv_img;
+                } else if (this.gameState.active_drops[i].type === "rapid_fire"){
+                    current = this.rf_img;
+                }
+
+                this.ctx.drawImage(current, this.gameState.active_drops[i].x, this.gameState.active_drops[i].y, 16, 16)
+            }
         }
     }
 

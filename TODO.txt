@@ -9,12 +9,13 @@ Controllare se poter accedere alla guida senza aver fatto login è un problema
 Could cheat by spawning infinite drops
 
 Tell player that faster ufos are worth more
-If user passes into update_game_data not enum values, program crashes
+If power up already present of the same time, prolong duration
 Check if handlers are all right with content maybe not loaded
 Add waves to statistics
 Fix schermo che scorre con spacebar
 Check what happens when screen shrinks vertically
-add exit button on the left on guide
+Collisions should use dynamic widths
+
 
 It seems to handle multiple games at the same time by the same player well -- make session unique per user across different browsers
 High score doesn't update if a game is finished in another tab
