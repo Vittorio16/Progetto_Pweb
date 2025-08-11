@@ -6,9 +6,10 @@ export class GameState {
         this.paused = false;
         this.pauseTimer = 0;
 
-        this.gameData = {bullets_shot: 0, time_elapsed: 0, enemy_score_spawned: 0, enemies_killed: 0, waves_cleared: 0};
+        this.gameData = {bullets_shot: 0, time_elapsed: 0, enemy_score_spawned: 0, enemies_killed: 0, waves_cleared: 0, enemy_displacement: 0};
 
-        this.player = {x: canvas_width / 2 - 16, y: canvas_height - 52, width: 32, height: 32, speed: 200, direction: 0, shooting: false, reloading: false};
+        this.player = {x: canvas_width / 2 - 16, y: canvas_height - 52, width: 32, height: 32, speed: 200, direction: 0, 
+                        shooting: false, reloading: false, reload_time: 500};
 
         this.ufo = {present: false, x: 0, y: 60, width: 40, height: 20, speed: 0, score: 0, spawn_probability: 0.003};
 
@@ -77,8 +78,6 @@ export class GameState {
 
     // Creates enemies
     add_enemies(){
-        this.gameData.enemy_score_spawned += 22 * 10 + 22 * 20 + 22 * 30;
-
         const num_horizontal_enemies = 11;
         const num_rows = 5;
         let current_x = 50;
@@ -100,6 +99,7 @@ export class GameState {
             }
 
             for (let j = 0; j < num_horizontal_enemies; j++){
+                this.gameData.enemy_score_spawned += s;
                 this.enemies.push({x: current_x, y: current_y, width: 32, height: 32, score: s});
 
                 if (current_x > this.enemy_position.max_x) {
@@ -131,7 +131,8 @@ export class GameState {
             }
 
             this.ufo.score = Math.round(this.ufo.speed / 5);
-            
+            this.gameData.enemy_score_spawned += this.ufo.score;
+
             this.ufo.x = -40;
         }
     }
@@ -197,7 +198,7 @@ export class GameState {
 
             setTimeout(() => {
                 this.player.reloading = false;
-            }, 500);
+            }, this.player.reload_time);
         }
     }
 
@@ -226,7 +227,8 @@ export class GameState {
     // Tries to move enemies horizontally if possible
     move_enemies_horizontal(delta_seconds){
         const delta_x = this.enemy_position.direction * this.enemy_position.speed * delta_seconds;
-
+        this.gameData.enemy_displacement += delta_x;
+        
         if (this.enemy_position.max_x + delta_x + 32 > this.max_x || this.enemy_position.min_x + delta_x < 0){
             this.enemy_position.current_displacement = 0;
             this.enemy_position.direction = 0;
@@ -347,6 +349,7 @@ export class GameState {
     // Checks whether enemies have reached player height
     check_enemies_bottom(){
         if (this.enemy_position.max_y + 32 > this.player.y){
+            this.update_game_progress("GAME_END");
             this.gameOver = true;
         }
     }

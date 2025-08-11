@@ -1,5 +1,6 @@
 <?php
 require_once "dbaccess.php";
+require_once "anti_cheat.php";
 session_start();
 
 $conn =  mysqli_connect(DBHOST, DBUSER, DBPASS,  DBNAME);
@@ -19,16 +20,18 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
         if (hash_equals($_SESSION['token'], $_COOKIE['session_token'])) {
             
 
-            if (!$_SESSION["game_in_progress"]){
+            if (!$_SESSION["game_in_progress"] || $_SESSION["game_id"] == null){
                 echo json_encode(["status" => "error","message"=> "Game not in progress"]);
                 exit();
             }
-            $falsi = false;
-            if ($falsi){
-                // TODO: security checks and check logged in
+
+            // Cross checks game data sent at game over and game data saved in db to check for cheating
+            $cheated = check_cheating($conn, $score, $gameData);
+
+            if ($cheated){
                 echo json_encode([
-                    "status" => "error",
-                    "message" => "Better luck next time",
+                    "status"=> "error",
+                    "message"=> "Better luck next time",
                 ]);
                 exit();
             }

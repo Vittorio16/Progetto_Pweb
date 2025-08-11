@@ -3,23 +3,13 @@ Game interface {
     add drops to make modifiers for the ship
     better death animation
     explosions on impact
-    change color of space ship
-} on game over {
-    congratulations if new high score
-    congratulatons (and extra animations?) if top ? in leaderboard
 }
-
 
 aggiungere messaggio in mancato login/signup via serverside
 Controllare se poter accedere alla guida senza aver fatto login è un problema
-Make session unique per user across different browsers
-cambiare animazione giocatore tra nuova wave e vita persa?
-ordinare scores in ordine cronologico/di high score
 Unfocus all buttons after clickig (so that pressing space doesn't reclick them)
-keep track of bullets shot, enemies killed and game time in order to perform server side controls (su gpt, canvas restart issues)
-Could also cheat with infinite lives or by stopping collision check or stopping enemies or infinite lives....
-Tie a game with game id, and don't save data if multiple games are in progress (so if timestamp is less than current time)
-Need to save starting datetime on save_score.php
+Could cheat by spawning infinite drops
+
 Tell player that faster ufos are worth more
 If user passes into update_game_data not enum values, program crashes
 Check if handlers are all right with content maybe not loaded
@@ -28,8 +18,41 @@ Quando play game chiudi sidebar
 Add waves to statistics
 Fix schermo che scorre con spacebar
 Check what happens when screen shrinks vertically
+Error when player is hit by two bullets at the same time
+
+It seems to handle multiple games at the same time by the same player well -- make session unique per user across different browsers
+High score doesn't update if a game is finished in another tab
+Can still always cheat by simulating a whole game
+Could cheat by stopping collision check on player
+Can't really check game_start and game_end, might not have loaded yet
+Still ways to cheat, especially if slightly
 
 Riattivare autoupdate chrome
 
-
 Fatto:
+
+const score = 1000000;
+const gameData = {
+    bullets_shot: 0,
+    time_elapsed: 0,
+    enemy_score_spawned: 0,
+    enemies_killed: 0,
+    waves_cleared: 0
+};
+
+const payload = { score, gameData };
+
+try {
+    const res = await fetch("../php/end_game.php", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+    });
+
+    const resData = await res.json();
+    console.log(resData);
+} catch (err) {
+    console.error("Error submitting game data:", err);
+}
