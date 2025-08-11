@@ -22,7 +22,7 @@ export class GameState {
         this.bullet_speed = {friendly: 400, enemy: 100};
 
         this.score = 0;
-        this.lives = 1;
+        this.lives = 3;
 
         this.shields = [];
 
@@ -183,7 +183,16 @@ export class GameState {
             this.update_game_progress("BULLET_FIRED");
             this.gameData.bullets_shot++;
 
-            this.bullets.push({x: x_origin + 16, y: y_origin - 10, friendly: true});
+            if (this.player.power_ups["2x"]){
+                this.update_game_progress("BULLET_FIRED");
+                this.gameData.bullets_shot++;
+
+                this.bullets.push({x: x_origin + 12, y: y_origin - 10, friendly: true});
+                this.bullets.push({x: x_origin + 20, y: y_origin - 10, friendly: true})
+
+            } else {
+                this.bullets.push({x: x_origin + 16, y: y_origin - 10, friendly: true});
+            }
         } else {
             this.bullets.push({x: x_origin + 16, y: y_origin + 42, friendly: false});
         }
@@ -374,16 +383,20 @@ export class GameState {
                 }
             } else {
                 // Bullet is enemy, check collisions with player
-                if (bullet.x >= this.player.x && bullet.x <= this.player.x + 32 && bullet.y >= this.player.y && bullet.y <= this.player.y + 32 ){
-                    this.removeLife();
-                    life_lost = true;
-                    continue;
+                if (bullet.x >= this.player.x && bullet.x <= this.player.x + 32 && bullet.y >= this.player.y && bullet.y <= this.player.y + 32){
+                    if (!this.player.power_ups["invulnerability"]){
+                        this.removeLife();
+                        life_lost = true;
+                        continue;
+                    }
                 }
             }
         }
         if (life_lost || this.new_wave){
             this.bullets = [];
             this.active_drops = [];
+
+            this.player.power_ups = {};
         }
     }
 

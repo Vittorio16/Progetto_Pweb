@@ -1,17 +1,14 @@
 
 Game interface {
-    add drops to make modifiers for the ship
     better death animation
     explosions on impact
 }
 
 Controllare se poter accedere alla guida senza aver fatto login è un problema
-Could cheat by spawning infinite drops
-
 Tell player that faster ufos are worth more
-If power up already present of the same time, prolong duration
 Check if handlers are all right with content maybe not loaded
 Add waves to statistics
+Add invulnerability animation
 Fix schermo che scorre con spacebar
 Check what happens when screen shrinks vertically
 Collisions should use dynamic widths
@@ -22,6 +19,7 @@ High score doesn't update if a game is finished in another tab
 Can still always cheat by simulating a whole game
 Could cheat by stopping collision check on player
 Can't really check game_start and game_end, might not have loaded yet
+Could cheat by spawning infinite drops or ufos
 Still ways to cheat, especially if slightly
 
 Riattivare autoupdate chrome
@@ -29,9 +27,8 @@ Riattivare autoupdate chrome
 
 
 Fatto:
-Quando play game chiudi sidebar
-aggiungere messaggio in mancato login/signup via serverside
-Unfocus all buttons after clickig (so that pressing space doesn't reclick them)
+If power up already present of the same time, prolong duration
+Add drops to make modifiers for the ship
 
 
 
