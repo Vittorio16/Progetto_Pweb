@@ -49,6 +49,14 @@ export class GameCanvas {
         this.shield_img.src = "../js/lib/images/shield.png";
         this.shield_img.onload = () => this.checkAllImagesLoaded();
 
+        this.player_bullet_img = new Image();
+        this.player_bullet_img.src = "../js/lib/images/player_bullet.png";
+        this.player_bullet_img.onload = () => this.checkAllImagesLoaded();
+
+        this.enemy_bullet_img = new Image();
+        this.enemy_bullet_img.src = "../js/lib/images/enemy_bullet.png";
+        this.enemy_bullet_img.onload = () => this.checkAllImagesLoaded();
+
         this.x2_img = new Image();
         this.x2_img.src = "../js/lib/images/power_up_2x.png";
         this.x2_img.onload = () => this.checkAllImagesLoaded();
@@ -199,7 +207,7 @@ export class GameCanvas {
     // Makes sure all pngs are loaded before trying to draw the board
     checkAllImagesLoaded(){
         this.imagesLoaded++;
-        if (this.imagesLoaded === 9){
+        if (this.imagesLoaded === 11){
             this.drawGame();
         }
     }
@@ -260,7 +268,7 @@ export class GameCanvas {
                     current_img = this.bot_enemy_img;
                 }
 
-                this.ctx.drawImage(current_img, current_enemy.x, current_enemy.y, 32, 32);
+                this.ctx.drawImage(current_img, current_enemy.x, current_enemy.y, 30, 30);
             }
         } else {
             console.log("Couldn't load enemies");
@@ -270,22 +278,19 @@ export class GameCanvas {
         // Draws the ufo, if present
         if (this.ufo_img.complete && this.gameState.ufo.present){
             const ufo = this.gameState.ufo;
-            this.ctx.drawImage(this.ufo_img, ufo.x, ufo.y, 40, 20);
+            this.ctx.drawImage(this.ufo_img, ufo.x, ufo.y, 32, 32);
         }
 
 
         // Draws the bullets
-        for (let i = 0; i < this.gameState.bullets.length; i++){
-            this.ctx.beginPath();
-            this.ctx.moveTo(this.gameState.bullets[i].x,  this.gameState.bullets[i].y);    
-            if (this.gameState.bullets[i].friendly){
-                this.ctx.lineTo(this.gameState.bullets[i].x, this.gameState.bullets[i].y + 10);   
-            } else {
-                this.ctx.lineTo(this.gameState.bullets[i].x, this.gameState.bullets[i].y - 10);   
+        if (this.player_bullet_img.complete && this.enemy_bullet_img.complete){
+            for (let i = 0; i < this.gameState.bullets.length; i++){
+                if (this.gameState.bullets[i].friendly){
+                    this.ctx.drawImage(this.player_bullet_img, this.gameState.bullets[i].x - 3, this.gameState.bullets[i].y, 6, 12);
+                } else {
+                    this.ctx.drawImage(this.enemy_bullet_img, this.gameState.bullets[i].x - 3, this.gameState.bullets[i].y - 12, 6, 12);
+                }
             }
-            this.ctx.strokeStyle = 'red'; 
-            this.ctx.lineWidth = 2;       
-            this.ctx.stroke();
         }
 
         // Draws the power ups

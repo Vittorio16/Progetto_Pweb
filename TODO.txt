@@ -1,6 +1,5 @@
 
 Game interface {
-    better death animation
     explosions on impact
 }
 
@@ -12,7 +11,6 @@ Add invulnerability animation
 Fix schermo che scorre con spacebar
 Check what happens when screen shrinks vertically
 Collisions should use dynamic widths
-
 
 It seems to handle multiple games at the same time by the same player well -- make session unique per user across different browsers
 High score doesn't update if a game is finished in another tab
@@ -29,6 +27,7 @@ Riattivare autoupdate chrome
 Fatto:
 If power up already present of the same time, prolong duration
 Add drops to make modifiers for the ship
+Fix collisions with drops
 
 
 

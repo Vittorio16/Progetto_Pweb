@@ -70,36 +70,43 @@ function check_cheating($conn, $score, $gameData){
                     $interval->s;;
 
     if (abs($game_time - $gameData["time_elapsed"]) > 5){
+        error_log("different game time");
         return true;
     }
 
     // if game score can't possibly be consistent with server score, flag (for score > 500 in case only fast ufos are killed, cheating for low scores not important)
     if ($score > $max_possible_score && $score > 600){
+        error_log("impossible high score");
         return true;
     }
 
     // User cheated the gameData and set more enemies killed 
     if ($enemies_killed != $gameData["enemies_killed"]){
+        error_log("different enemies killed");
         return true;
     }
 
     // Cheating detected in the score being greater than the max score possibly spawned
     if ($score > $gameData["enemy_score_spawned"]){
+        error_log("too few enemies");
         return true;
     }
 
     // Checks for infinite lives cheating
     if ($lives_lost > 3){
+        error_log("too many lives");
         return true;
     }
 
     // Firing inconsistencies (reload time < 80ms)
     if ($bullets_fired != $gameData["bullets_shot"] || $min_reload_time < 50 || $game_time / $bullets_fired < 0.08){
+        error_log("bullet inconsistency");
         return true;
     }
 
     // Tries to check for enemy slow downs
-    if ($gameData["enemy_displacement"] < $game_time * 50 / 10){
+    if ($gameData["enemy_displacement"] < $game_time * 50 / 20){
+        error_log("help me i'm stuck");
         return true;
     }
     // No cheating detected

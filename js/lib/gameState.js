@@ -12,7 +12,7 @@ export class GameState {
                         shooting: false, reloading: false, reload_time: 500,
                         power_ups: {}};
 
-        this.ufo = {present: false, x: 0, y: 60, width: 40, height: 20, speed: 0, score: 0, spawn_probability: 0.003};
+        this.ufo = {present: false, x: 0, y: 60, width: 32, height: 32, speed: 0, score: 0, spawn_probability: 0.003};
 
         this.enemies = []; 
         this.enemy_scaling = {speed_multiplier: 1 /50, projectile_chance: 0.0002, starting_enemy_speed: 50};
@@ -26,7 +26,7 @@ export class GameState {
 
         this.shields = [];
 
-        this.power_up_data = {width: 16, height: 16, speed: 60, type: ["2x", "invulnerability", "rapid_fire"], duration: 15, spawn_probability: 0.03};
+        this.power_up_data = {width: 16, height: 16, speed: 60, type: ["2x", "invulnerability", "rapid_fire"], duration: 15, spawn_probability: 0.002};
         this.active_drops = [];
 
         this.max_x = canvas_width;
@@ -63,6 +63,9 @@ export class GameState {
         this.enemy_scaling.starting_enemy_speed += 10;
         this.enemy_scaling.speed_multiplier += this.enemy_scaling.speed_multiplier / 10;
         this.enemy_scaling.projectile_chance = this.enemy_scaling.projectile_chance * 1.5;
+
+        this.bullets = [];
+        this.player.power_ups = {};
 
         this.enemy_position = {moving: false, direction: 1, next_dir: -1, current_displacement: 0, max_x: 0, min_x: 50, max_y: 0, speed: 50, chance: 0.0002};
 
@@ -138,7 +141,7 @@ export class GameState {
             this.ufo.score = Math.round(this.ufo.speed / 5);
             this.gameData.enemy_score_spawned += this.ufo.score;
 
-            this.ufo.x = -40;
+            this.ufo.x = -this.ufo.width;
         }
     }
 
@@ -227,7 +230,7 @@ export class GameState {
             this.player.reloading = true;
 
             if (this.player.power_ups["rapid_fire"]){
-                this.player.reload_time = 200;
+                this.player.reload_time = 250;
             } else {
                 this.player.reload_time = 500;
             }
@@ -331,6 +334,14 @@ export class GameState {
         return false;
     }
 
+    // Handles collisions with drops
+    check_drop_hitbox(x, y){
+        if (x >= this.player.x && x <= this.player.x + this.player.width && y >= this.player.y && y <= this.player.y + this.player.height){
+            return true;
+        }
+        return false;
+    }
+
 
     // Handles bullet collisions
     check_collisions(){
@@ -377,7 +388,7 @@ export class GameState {
                 }
                 
                 // ufo hit
-                if (bullet.x >= this.ufo.x && bullet.x <= this.ufo.x + 40 && bullet.y >= this.ufo.y && bullet.y <= this.ufo.y + 20){
+                if (bullet.x >= this.ufo.x && bullet.x <= this.ufo.x + this.ufo.width && bullet.y >= this.ufo.y && bullet.y <= this.ufo.y + this.ufo.height){
                     this.kill_ufo();
                     this.bullets.splice(i, 1);
                 }
@@ -405,13 +416,16 @@ export class GameState {
     check_drop_collision(){
         for (let i = this.active_drops.length - 1; i >= 0; i--){
             const drop = this.active_drops[i];
-            if (drop.x >= this.player.x && drop.x <= this.player.x + 32 && drop.y >= this.player.y && drop.y <= this.player.y + 32){
+            const drop_width = this.power_up_data.width;
+            const drop_height = this.power_up_data.height;
+
+            if (this.check_drop_hitbox(drop.x, drop.y) || this.check_drop_hitbox(drop.x + drop.width, drop.y) ||
+                this.check_drop_hitbox(drop.x, drop.y + drop_height) || this.check_drop_hitbox(drop.x + drop_width, drop.y + drop_height)){
                 if (this.player.power_ups[drop.type] || this.player.power_ups[drop.type] === 0){
                     this.player.power_ups[drop.type] += this.power_up_data.duration;
                 } else {
                     this.player.power_ups[drop.type] = this.power_up_data.duration;
                 }
-                console.log(this.player.power_ups);
                 this.active_drops.splice(i, 1);
             }
         }
