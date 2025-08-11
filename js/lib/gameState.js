@@ -16,7 +16,8 @@ export class GameState {
 
         this.enemies = []; 
         this.enemy_scaling = {speed_multiplier: 1 /50, projectile_chance: 0.0002, starting_enemy_speed: 50};
-        this.enemy_position = {moving: false, direction: 1, next_dir: -1, current_displacement: 0, max_x: 0, min_x: 50, max_y: 0, speed: 50, chance: 0.0002};
+        this.enemy_position = {moving: false, direction: 1, next_dir: -1, current_displacement: 0, speed: 50, 
+            max_x: 0, min_x: 50, max_y: 0, width: 32, height: 32, chance: 0.0002};
 
         this.bullets = [];
         this.bullet_speed = {friendly: 400, enemy: 100};
@@ -71,7 +72,7 @@ export class GameState {
 
         this.add_enemies();
 
-        this.player.x = this.max_x / 2 - 16;
+        this.player.x = this.max_x / 2 - this.player.width / 2;
         this.player.y = this.max_y - 52;
 
         this.paused = true;
@@ -108,7 +109,7 @@ export class GameState {
 
             for (let j = 0; j < num_horizontal_enemies; j++){
                 this.gameData.enemy_score_spawned += s;
-                this.enemies.push({x: current_x, y: current_y, width: 32, height: 32, score: s});
+                this.enemies.push({x: current_x, y: current_y, width: this.enemy_position.width, height: this.enemy_position.height, score: s});
 
                 if (current_x > this.enemy_position.max_x) {
                     this.enemy_position.max_x = current_x;
@@ -194,10 +195,10 @@ export class GameState {
                 this.bullets.push({x: x_origin + 20, y: y_origin - 10, friendly: true})
 
             } else {
-                this.bullets.push({x: x_origin + 16, y: y_origin - 10, friendly: true});
+                this.bullets.push({x: x_origin + this.player.width / 2, y: y_origin - 8, friendly: true});
             }
         } else {
-            this.bullets.push({x: x_origin + 16, y: y_origin + 42, friendly: false});
+            this.bullets.push({x: x_origin + this.player.width / 2, y: y_origin + 42, friendly: false});
         }
     }
 
@@ -219,8 +220,8 @@ export class GameState {
         const x = this.player.x + this.player.direction * this.player.speed * delta_seconds;
         if (x < 0) {
             this.player.x = 0;
-        } else if (x > this.max_x - 32) {
-            this.player.x = this.max_x - 32;
+        } else if (x > this.max_x - this.player.width) {
+            this.player.x = this.max_x - this.player.width;
         } else{
             this.player.x = x;
         }
@@ -244,7 +245,7 @@ export class GameState {
 
     // Moves the enemies vertically a set amount
     move_enemies_vertical(delta_seconds){
-        if (this.enemy_position.current_displacement >= 32){
+        if (this.enemy_position.current_displacement >= this.enemy_position.height){
             const next = this.enemy_position.next_dir * (-1);
             this.enemy_position.direction = this.enemy_position.next_dir;
             this.enemy_position.next_dir = next;
@@ -268,7 +269,7 @@ export class GameState {
         const delta_x = this.enemy_position.direction * this.enemy_position.speed * delta_seconds;
         this.gameData.enemy_displacement += delta_x;
 
-        if (this.enemy_position.max_x + delta_x + 32 > this.max_x || this.enemy_position.min_x + delta_x < 0){
+        if (this.enemy_position.max_x + delta_x + this.enemy_position.width > this.max_x || this.enemy_position.min_x + delta_x < 0){
             this.enemy_position.current_displacement = 0;
             this.enemy_position.direction = 0;
 
@@ -375,7 +376,7 @@ export class GameState {
                     const enemy = this.enemies[j];
 
                     // enemy hit
-                    if (bullet.x >= enemy.x && bullet.x <= enemy.x + 32 && bullet.y >= enemy.y && bullet.y <= enemy.y + 32){
+                    if (bullet.x >= enemy.x && bullet.x <= enemy.x + this.enemy_position.width && bullet.y >= enemy.y && bullet.y <= enemy.y + this.enemy_position.height){
                         this.kill_enemy(j);
                         enemy_hit = true;
                         this.bullets.splice(i, 1);
@@ -388,13 +389,15 @@ export class GameState {
                 }
                 
                 // ufo hit
-                if (bullet.x >= this.ufo.x && bullet.x <= this.ufo.x + this.ufo.width && bullet.y >= this.ufo.y && bullet.y <= this.ufo.y + this.ufo.height){
+                if (bullet.x >= this.ufo.x && bullet.x <= this.ufo.x + this.ufo.width && bullet.y >= this.ufo.y && 
+                    bullet.y <= this.ufo.y + this.ufo.height){
                     this.kill_ufo();
                     this.bullets.splice(i, 1);
                 }
             } else {
                 // Bullet is enemy, check collisions with player
-                if (bullet.x >= this.player.x && bullet.x <= this.player.x + 32 && bullet.y >= this.player.y && bullet.y <= this.player.y + 32){
+                if (bullet.x >= this.player.x && bullet.x <= this.player.x + this.player.width && 
+                    bullet.y >= this.player.y && bullet.y <= this.player.y + this.player.height){
                     if (!this.player.power_ups["invulnerability"]){
                         this.removeLife();
                         life_lost = true;
@@ -434,7 +437,7 @@ export class GameState {
 
     // Checks whether enemies have reached player height
     check_enemies_bottom(){
-        if (this.enemy_position.max_y + 32 > this.player.y){
+        if (this.enemy_position.max_y + this.enemy_position.height > this.player.y){
             this.update_game_progress("GAME_END");
             this.gameOver = true;
         }
