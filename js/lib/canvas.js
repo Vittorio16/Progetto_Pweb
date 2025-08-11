@@ -90,6 +90,7 @@ export class GameCanvas {
     async toggleGame(){
         this.resetGame();
         this.gameState = new GameState(this.width, this.height);
+        document.getElementById("sidebar").classList.add("hidden");
         
         // Tells the server to start a new game (only possible if the user doesn't have other games active)
         try {

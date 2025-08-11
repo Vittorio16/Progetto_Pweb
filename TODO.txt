@@ -5,20 +5,16 @@ Game interface {
     explosions on impact
 }
 
-aggiungere messaggio in mancato login/signup via serverside
 Controllare se poter accedere alla guida senza aver fatto login è un problema
-Unfocus all buttons after clickig (so that pressing space doesn't reclick them)
 Could cheat by spawning infinite drops
 
 Tell player that faster ufos are worth more
 If user passes into update_game_data not enum values, program crashes
 Check if handlers are all right with content maybe not loaded
-add exit button on the left on guide
-Quando play game chiudi sidebar
 Add waves to statistics
 Fix schermo che scorre con spacebar
 Check what happens when screen shrinks vertically
-Error when player is hit by two bullets at the same time
+add exit button on the left on guide
 
 It seems to handle multiple games at the same time by the same player well -- make session unique per user across different browsers
 High score doesn't update if a game is finished in another tab
@@ -29,7 +25,14 @@ Still ways to cheat, especially if slightly
 
 Riattivare autoupdate chrome
 
+
+
 Fatto:
+Quando play game chiudi sidebar
+aggiungere messaggio in mancato login/signup via serverside
+Unfocus all buttons after clickig (so that pressing space doesn't reclick them)
+
+
 
 const score = 1000000;
 const gameData = {

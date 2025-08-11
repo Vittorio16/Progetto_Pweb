@@ -56,7 +56,7 @@ export class GameState {
         this.gameData.waves_cleared++;
 
         this.enemy_scaling.starting_enemy_speed += 10;
-        this.enemy_scaling.speed_multiplier += this.enemy_scaling.speed_multiplier / 2;
+        this.enemy_scaling.speed_multiplier += this.enemy_scaling.speed_multiplier / 10;
         this.enemy_scaling.projectile_chance = this.enemy_scaling.projectile_chance * 1.5;
 
         this.enemy_position = {moving: false, direction: 1, next_dir: -1, current_displacement: 0, max_x: 0, min_x: 50, max_y: 0, speed: 50, chance: 0.0002};
@@ -228,7 +228,7 @@ export class GameState {
     move_enemies_horizontal(delta_seconds){
         const delta_x = this.enemy_position.direction * this.enemy_position.speed * delta_seconds;
         this.gameData.enemy_displacement += delta_x;
-        
+
         if (this.enemy_position.max_x + delta_x + 32 > this.max_x || this.enemy_position.min_x + delta_x < 0){
             this.enemy_position.current_displacement = 0;
             this.enemy_position.direction = 0;

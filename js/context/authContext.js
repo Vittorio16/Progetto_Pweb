@@ -15,7 +15,6 @@ export class AuthContext {
         const passwordInput = document.getElementById("signup-password");
 
         if (!usernameInput.validity.valid){
-
             alert("The username must be between 3 and 20 characters long. \nOther than letters and numbers, allowed characters are: ! # $ % & * ^ _ - ~");
             return;
         }
@@ -84,6 +83,8 @@ export class AuthContext {
 
 
     async handleViewHistory(){
+        document.getElementById("view-history").blur();
+
         const gameHistory = await apiContext.viewHistory();
         const dia = document.getElementById("game-history");
         const games_list = document.getElementById("game-history-list");
@@ -133,6 +134,8 @@ export class AuthContext {
 
 
     async handleViewScoreboard(){
+        document.getElementById("view-scoreboard").blur();
+        
         const scoreboard = await apiContext.viewScoreboard();
         const dia = document.getElementById("scoreboard");
         const games_list = document.getElementById("scoreboard-list");

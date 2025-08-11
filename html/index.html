@@ -14,7 +14,7 @@
         <h1>Space Invaders</h1>
         <div id="signup-form" class="entry-form">
             <h3>Register</h3>
-            <form onsubmit="authContext.handleSignup(event)">
+            <form onsubmit="authContext.handleSignup(event)" novalidate>
                 <div>
                     <label for="signup-username">Username</label>
                     <input name="username" id="signup-username" type="text" pattern="^[A-Za-z0-9!#$%&*^_-~]{3,20}$" required>
@@ -40,7 +40,7 @@
 
         <div id="login-form" class="hidden entry-form">
             <h3>Login</h3>
-            <form onsubmit="authContext.handleLogin(event)">
+            <form onsubmit="authContext.handleLogin(event)" novalidate>
                 <div>
                     <label for="login-username">Username</label>
                     <input name="username" id="login-username" type="text" pattern="^[A-Za-z0-9!#$%&*^_-~]{3,20}$" required>
@@ -67,8 +67,8 @@
             </header>
 
             <nav id="sidebar" class="sidebar hidden">
-                <button onclick="authContext.handleViewHistory()">Game History</button>
-                <button onclick="authContext.handleViewScoreboard()">Global Scoreboard</button>
+                <button id="view-history" onclick="authContext.handleViewHistory()">Game History</button>
+                <button id="view-scoreboard" onclick="authContext.handleViewScoreboard()">Global Scoreboard</button>
                 <button onclick="window.location.href='guide.html'">Game Guide</button>
                 <button id="logout-button" onclick="authContext.handleLogout(event)">Log Out</button>
             </nav>
