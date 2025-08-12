@@ -105,7 +105,7 @@ function check_cheating($conn, $score, $gameData){
     }
 
     // Tries to check for enemy slow downs
-    if ($gameData["enemy_displacement"] < $game_time * 50 / 20){
+    if ($gameData["enemy_displacement"] < $game_time * 50 / 50){
         error_log("help me i'm stuck");
         return true;
     }

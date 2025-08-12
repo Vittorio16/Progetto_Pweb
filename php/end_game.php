@@ -37,8 +37,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             }
 
             // Inserts the game into the games db
-            $query = $conn->prepare("INSERT INTO user_scores (user_id, score, bullets_shot, enemies_killed) VALUES (?,?,?,?)");
-            $query->bind_param("iiii", $_SESSION["user_id"], $score, $gameData["bullets_shot"], $gameData["enemies_killed"]);
+            $query = $conn->prepare("INSERT INTO user_scores (user_id, score, bullets_shot, enemies_killed, waves_cleared) VALUES (?,?,?,?, ?)");
+            $query->bind_param("iiiii", $_SESSION["user_id"], $score, $gameData["bullets_shot"], 
+                                $gameData["enemies_killed"], $gameData["waves_cleared"]);
             $query->execute();
 
             $query = $conn->prepare("SELECT MAX(score) as score FROM user_scores WHERE user_id=?");
@@ -77,9 +78,9 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             }
 
             if ($insert){
-                $query = $conn->prepare("INSERT INTO top_scores (game_id, username, score, bullets_shot, enemies_killed) VALUES (?,?,?,?,?)");
-                $query->bind_param("isiii", $_SESSION["game_id"], $_SESSION["username"], $score,
-                                    $gameData["bullets_shot"], $gameData["enemies_killed"]);
+                $query = $conn->prepare("INSERT INTO top_scores (game_id, username, score, bullets_shot, enemies_killed, waves_cleared) VALUES (?,?,?,?,?,?)");
+                $query->bind_param("isiiii", $_SESSION["game_id"], $_SESSION["username"], $score,
+                                    $gameData["bullets_shot"], $gameData["enemies_killed"], $gameData["waves_cleared"]);
                 $query->execute();
             }
 

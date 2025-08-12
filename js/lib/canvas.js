@@ -45,6 +45,10 @@ export class GameCanvas {
         this.player_img.src = "../js/lib/images/player_ship.png";
         this.player_img.onload = () => this.checkAllImagesLoaded();
 
+        this.invulnerable_player_img = new Image();
+        this.invulnerable_player_img.src = "../js/lib/images/invulnerable_player_ship.png";
+        this.invulnerable_player_img.onload = () => this.checkAllImagesLoaded();
+
         this.shield_img = new Image();
         this.shield_img.src = "../js/lib/images/shield.png";
         this.shield_img.onload = () => this.checkAllImagesLoaded();
@@ -207,7 +211,7 @@ export class GameCanvas {
     // Makes sure all pngs are loaded before trying to draw the board
     checkAllImagesLoaded(){
         this.imagesLoaded++;
-        if (this.imagesLoaded === 11){
+        if (this.imagesLoaded === 12){
             this.drawGame();
         }
     }
@@ -226,9 +230,23 @@ export class GameCanvas {
 
         const player = this.gameState.player;
 
-        // Draws the player, flickering if just hit
-        if (this.player_img.complete && (this.gameState.pauseTimer <= 0 || Math.floor(this.gameState.pauseTimer * 10) % 2 === 0)) {
-            this.ctx.drawImage(this.player_img, player.x, player.y, 32, 32);
+        // Draws the player, flickering if just hit, and accounting for invulnerability power up, flickering when ending
+        if (this.player_img.complete && this.invulnerable_player_img.complete && 
+            (this.gameState.pauseTimer <= 0 || Math.floor(this.gameState.pauseTimer * 10) % 2 === 0)) {
+
+            if (this.gameState.player.power_ups["invulnerability"] > 2){
+                this.ctx.drawImage(this.invulnerable_player_img, player.x, player.y, 32, 32);
+
+            } else if (this.gameState.player.power_ups["invulnerability"] > 0){
+                const flickerOn = Math.floor(Date.now() / 250) % 2 === 0;
+                if (flickerOn) {
+                    this.ctx.drawImage(this.player_img, player.x, player.y, 32, 32);
+                } else {
+                    this.ctx.drawImage(this.invulnerable_player_img, player.x, player.y, 32, 32);
+                }
+            } else {
+                this.ctx.drawImage(this.player_img, player.x, player.y, 32, 32);
+            }
         }
 
         // New wave pop up

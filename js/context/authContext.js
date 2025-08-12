@@ -122,8 +122,10 @@ export class AuthContext {
                         <div class="time">Achieved at: ${new Date(game.ended_at).toLocaleString()}</div>
                     </div>
                     <div class="entry-right">
-                        <div class="bullets">Bullets shot: ${game.bullets_shot}</div>
-                        <div class="enemies">Enemies killed: ${game.enemies_killed}</div>
+                        <div>Bullets shot: ${game.bullets_shot}</div>
+                        <div>Enemies killed: ${game.enemies_killed}</div>
+                        <div>Waves cleared: ${game.waves_cleared}</div>
+
                     </div>
                 `;
             }
@@ -163,8 +165,10 @@ export class AuthContext {
                     <div class="time">Achieved at: ${new Date(game.ended_at).toLocaleString()}</div>
                     </div>
                     <div class="entry-right">
-                        <div class="bullets">Bullets shot: ${game.bullets_shot}</div>
-                        <div class="enemies">Enemies killed: ${game.enemies_killed}</div>
+                        <div>Bullets shot: ${game.bullets_shot}</div>
+                        <div>Enemies killed: ${game.enemies_killed}</div>
+                        <div>Waves cleared: ${game.waves_cleared}</div>
+
                     </div>
                 `;
             }

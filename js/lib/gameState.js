@@ -65,10 +65,10 @@ export class GameState {
         this.enemy_scaling.speed_multiplier += this.enemy_scaling.speed_multiplier / 10;
         this.enemy_scaling.projectile_chance = this.enemy_scaling.projectile_chance * 1.5;
 
-        this.bullets = [];
         this.player.power_ups = {};
 
-        this.enemy_position = {moving: false, direction: 1, next_dir: -1, current_displacement: 0, max_x: 0, min_x: 50, max_y: 0, speed: 50, chance: 0.0002};
+        this.enemy_position = {moving: false, direction: 1, next_dir: -1, speed: 50,
+                                current_displacement: 0, max_x: 0, min_x: 50, max_y: 0, width: 32, height: 32, chance: 0.0002};
 
         this.add_enemies();
 
@@ -139,7 +139,7 @@ export class GameState {
                 this.ufo.speed = 100;
             }
 
-            this.ufo.score = Math.round(this.ufo.speed / 5);
+            this.ufo.score = Math.round(this.ufo.speed / 2);
             this.gameData.enemy_score_spawned += this.ufo.score;
 
             this.ufo.x = -this.ufo.width;
@@ -235,7 +235,6 @@ export class GameState {
             } else {
                 this.player.reload_time = 500;
             }
-            console.log(this.player.reload_time);
             setTimeout(() => {
                 this.player.reloading = false;
             }, this.player.reload_time);
@@ -376,6 +375,7 @@ export class GameState {
                     const enemy = this.enemies[j];
 
                     // enemy hit
+                    console.log(this.enemy_position);
                     if (bullet.x >= enemy.x && bullet.x <= enemy.x + this.enemy_position.width && bullet.y >= enemy.y && bullet.y <= enemy.y + this.enemy_position.height){
                         this.kill_enemy(j);
                         enemy_hit = true;
@@ -384,7 +384,7 @@ export class GameState {
                         break;
                     }
                 }
-                if (enemy_hit){
+                if (enemy_hit || this.new_wave){
                     continue;
                 }
                 
@@ -409,7 +409,6 @@ export class GameState {
         if (life_lost || this.new_wave){
             this.bullets = [];
             this.active_drops = [];
-
             this.player.power_ups = {};
         }
     }
@@ -583,11 +582,11 @@ export class GameState {
 
         this.move_bullets(delta_seconds);
 
-        this.check_collisions();
         this.check_drop_collision();
+        this.check_collisions();
 
         this.update_active_drops(delta_seconds);
-
+        
         this.check_enemies_bottom();
     }
 }

@@ -12,7 +12,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if (isset($_SESSION['user_id'], $_SESSION['token'], $_COOKIE['session_token'])) {
         if (hash_equals($_SESSION['token'], $_COOKIE['session_token'])) {
 
-            $query = $conn->prepare('SELECT score, ended_at, bullets_shot, enemies_killed FROM user_scores WHERE user_id=? ORDER BY ended_at DESC');
+            $query = $conn->prepare('SELECT score, ended_at, bullets_shot, enemies_killed, waves_cleared FROM user_scores 
+                                            WHERE user_id=? ORDER BY ended_at DESC');
             $query->bind_param('i', $_SESSION['user_id']);
             $query->execute();
 

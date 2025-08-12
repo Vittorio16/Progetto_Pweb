@@ -12,7 +12,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     if (isset($_SESSION['user_id'], $_SESSION['token'], $_COOKIE['session_token'])) {
         if (hash_equals($_SESSION['token'], $_COOKIE['session_token'])) {
 
-            $query = $conn->prepare('SELECT username, score, ended_at, bullets_shot, enemies_killed FROM top_scores 
+            $query = $conn->prepare('SELECT username, score, ended_at, bullets_shot, enemies_killed, waves_cleared FROM top_scores 
                                         ORDER BY score DESC, ended_at DESC LIMIT 20');
             $query->execute();
             $result = $query->get_result();
