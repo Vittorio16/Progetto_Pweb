@@ -1,4 +1,9 @@
 <?php
+ini_set('display_errors', 0);        // Don’t show errors in the browser
+ini_set('log_errors', 1);            // Enable logging
+ini_set('error_log', '/tmp/php_errors.log');  // Path to log file
+error_reporting(E_ALL);              // Report all types of errors
+
 require_once "dbaccess.php";
 session_start();
 

@@ -37,7 +37,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             }
 
             // Inserts the game into the games db
-            $query = $conn->prepare("INSERT INTO user_scores (user_id, score, bullets_shot, enemies_killed, waves_cleared) VALUES (?,?,?,?, ?)");
+            $query = $conn->prepare("INSERT INTO user_scores (user_id, score, bullets_shot, enemies_killed, waves_cleared) VALUES (?,?,?,?,?)");
             $query->bind_param("iiiii", $_SESSION["user_id"], $score, $gameData["bullets_shot"], 
                                 $gameData["enemies_killed"], $gameData["waves_cleared"]);
             $query->execute();

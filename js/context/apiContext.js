@@ -30,7 +30,7 @@ export class ApiContext {
             }
         } catch (error) {
             console.error("Error: ", error);
-            alert("An unexpected error occured");
+            alert("An unexpected signup error occured");
             return {
                 user: null,
                 token: null,
