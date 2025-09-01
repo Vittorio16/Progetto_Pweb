@@ -375,7 +375,6 @@ export class GameState {
                     const enemy = this.enemies[j];
 
                     // enemy hit
-                    console.log(this.enemy_position);
                     if (bullet.x >= enemy.x && bullet.x <= enemy.x + this.enemy_position.width && bullet.y >= enemy.y && bullet.y <= enemy.y + this.enemy_position.height){
                         this.kill_enemy(j);
                         enemy_hit = true;
