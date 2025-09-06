@@ -67,7 +67,7 @@ function check_cheating($conn, $score, $gameData){
     $game_time = ($interval->days * 24 * 60 * 60) +
                     ($interval->h * 60 * 60) +
                     ($interval->i * 60) +
-                    $interval->s;;
+                    $interval->s;
 
     if (abs($game_time - $gameData["time_elapsed"]) > 5){
         error_log("different game time");
@@ -98,9 +98,11 @@ function check_cheating($conn, $score, $gameData){
         return true;
     }
 
-    // Firing inconsistencies (reload time < 80ms)
-    if ($bullets_fired != $gameData["bullets_shot"] || $min_reload_time < 25 || $game_time / $bullets_fired < 0.08){
+    // Firing inconsistencies
+
+    if ($bullets_fired != $gameData["bullets_shot"] || $min_reload_time < 50 || $game_time / $bullets_fired < 0.08){
         error_log("bullet inconsistency");
+
         return true;
     }
 
