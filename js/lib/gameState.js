@@ -188,9 +188,6 @@ export class GameState {
             this.gameData.bullets_shot++;
 
             if (this.player.power_ups["2x"]){
-                //this.update_game_progress("BULLET_FIRED");
-                //this.gameData.bullets_shot++;
-
                 this.bullets.push({x: x_origin + 12, y: y_origin - 10, friendly: true});
                 this.bullets.push({x: x_origin + 20, y: y_origin - 10, friendly: true})
 
