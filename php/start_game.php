@@ -16,6 +16,8 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
             // Returns a game id -- different than the one saved in the user scores db after game finishes
             // Used to authenticate input
+            $conn->begin_transaction();
+
             $query = $conn->prepare('SELECT MAX(game_id) AS max_id FROM game_events');
             $query->execute();
             $result = $query->get_result();
@@ -29,6 +31,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
             $query->bind_param( "iis", $_SESSION["game_id"], $_SESSION["user_id"], $event_type);
             $query->execute();
 
+            $conn->commit();
             echo json_encode(['status'=> 'success', 'game_id'=> $_SESSION["game_id"]]);
             exit();
         }

@@ -16,9 +16,6 @@ function resizeGameCanvas() {
 }
 
 
-
-
-
 function initializeHandlers() {
     authContext.handle_check_logged_in()
 

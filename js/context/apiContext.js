@@ -166,7 +166,6 @@ export class ApiContext {
 
             const data = await res.json();
             if (data.status === "success"){
-                console.log(data.games);
                 return data.games;
             } else {
                 return null;

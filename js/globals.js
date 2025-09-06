@@ -9,10 +9,13 @@ export const apiContext = new ApiContext();
 
 document.addEventListener('DOMContentLoaded', () => {
     const canvasElement = document.getElementById('game-canvas');
-    const gameCanvas = new GameCanvas(canvasElement);
+
+    if (canvasElement){
+        const gameCanvas = new GameCanvas(canvasElement);
+        window.gameCanvas = gameCanvas;
+    }
 
     window.userHomePage = userHomePage;
     window.authContext = authContext;
     window.apiContext = apiContext;
-    window.gameCanvas = gameCanvas;
 });

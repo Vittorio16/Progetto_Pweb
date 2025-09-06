@@ -43,7 +43,7 @@ function check_cheating($conn, $score, $gameData){
         if ($entry["event_type"] === "BULLET_FIRED"){
             $bullets_fired++;
 
-            /*if ($previous_bullet != INF){
+            if ($previous_bullet != INF){
                 $new_bullet = new DateTime($entry["occured_at"]);
                 $new_bullet = (float) $new_bullet->format("U.u");
 
@@ -54,7 +54,7 @@ function check_cheating($conn, $score, $gameData){
                 }
             }
             $previous_bullet = new DateTime($entry["occured_at"]);
-            $previous_bullet = (float) $previous_bullet->format("U.u");*/
+            $previous_bullet = (float) $previous_bullet->format("U.u");
         }
     }
 
@@ -99,7 +99,7 @@ function check_cheating($conn, $score, $gameData){
     }
 
     // Firing inconsistencies (reload time < 80ms)
-    if ($bullets_fired != $gameData["bullets_shot"] || $min_reload_time < 50 || $game_time / $bullets_fired < 0.08){
+    if ($bullets_fired != $gameData["bullets_shot"] || $min_reload_time < 25 || $game_time / $bullets_fired < 0.08){
         error_log("bullet inconsistency");
         return true;
     }

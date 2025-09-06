@@ -27,7 +27,7 @@ export class GameState {
 
         this.shields = [];
 
-        this.power_up_data = {width: 16, height: 16, speed: 60, type: ["2x", "invulnerability", "rapid_fire"], duration: 15, spawn_probability: 0.002};
+        this.power_up_data = {width: 16, height: 16, speed: 60, type: ["2x", "invulnerability", "rapid_fire"], duration: 15, spawn_probability: 0.0025};
         this.active_drops = [];
 
         this.max_x = canvas_width;

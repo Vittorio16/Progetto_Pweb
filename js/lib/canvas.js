@@ -25,53 +25,13 @@ export class GameCanvas {
 
         this.gameState = new GameState(width, height);
 
-        this.ufo_img = new Image();
-        this.ufo_img.src = "../js/lib/images/ufo.png";
-        this.ufo_img.onload = () => this.checkAllImagesLoaded();
+        this.imgDict = {ufo_img: "../js/lib/images/ufo.png", top_enemy_img: "../js/lib/images/top_enemy.png", mid_enemy_img: "../js/lib/images/mid_enemy.png",
+            bot_enemy_img: "../js/lib/images/bot_enemy.png", player_img: "../js/lib/images/player_ship.png", invulnerable_player_img: "../js/lib/images/invulnerable_player_ship.png",
+            shield_img: "../js/lib/images/shield.png", player_bullet_img: "../js/lib/images/player_bullet.png", enemy_bullet_img: "../js/lib/images/enemy_bullet.png",
+            x2_img: "../js/lib/images/power_up_2x.png", rf_img: "../js/lib/images/power_up_rf.png", inv_img: "../js/lib/images/power_up_inv.png"
+        }
 
-        this.top_enemy_img = new Image();
-        this.top_enemy_img.src = "../js/lib/images/top_enemy.png";
-        this.top_enemy_img.onload = () => this.checkAllImagesLoaded();
-
-        this.mid_enemy_img = new Image();
-        this.mid_enemy_img.src = "../js/lib/images/mid_enemy.png";
-        this.mid_enemy_img.onload = () => this.checkAllImagesLoaded();
-
-        this.bot_enemy_img = new Image();
-        this.bot_enemy_img.src = "../js/lib/images/bot_enemy.png";
-        this.bot_enemy_img.onload = () => this.checkAllImagesLoaded();
-
-        this.player_img = new Image();
-        this.player_img.src = "../js/lib/images/player_ship.png";
-        this.player_img.onload = () => this.checkAllImagesLoaded();
-
-        this.invulnerable_player_img = new Image();
-        this.invulnerable_player_img.src = "../js/lib/images/invulnerable_player_ship.png";
-        this.invulnerable_player_img.onload = () => this.checkAllImagesLoaded();
-
-        this.shield_img = new Image();
-        this.shield_img.src = "../js/lib/images/shield.png";
-        this.shield_img.onload = () => this.checkAllImagesLoaded();
-
-        this.player_bullet_img = new Image();
-        this.player_bullet_img.src = "../js/lib/images/player_bullet.png";
-        this.player_bullet_img.onload = () => this.checkAllImagesLoaded();
-
-        this.enemy_bullet_img = new Image();
-        this.enemy_bullet_img.src = "../js/lib/images/enemy_bullet.png";
-        this.enemy_bullet_img.onload = () => this.checkAllImagesLoaded();
-
-        this.x2_img = new Image();
-        this.x2_img.src = "../js/lib/images/power_up_2x.png";
-        this.x2_img.onload = () => this.checkAllImagesLoaded();
-
-        this.rf_img = new Image();
-        this.rf_img.src = "../js/lib/images/power_up_rf.png";
-        this.rf_img.onload = () => this.checkAllImagesLoaded();
-
-        this.inv_img = new Image();
-        this.inv_img.src = "../js/lib/images/power_up_inv.png";
-        this.inv_img.onload = () => this.checkAllImagesLoaded();
+        this.createImgVariables();
 
         document.getElementById("logout-button").addEventListener("click",() => this.quitGame);
     }
@@ -208,10 +168,19 @@ export class GameCanvas {
     }
 
 
+    createImgVariables(){
+        for (let var_name in this.imgDict){
+            this[var_name] = new Image();
+            this[var_name].src = this.imgDict[var_name];
+            this[var_name].onload = () => this.checkAllImagesLoaded();
+        }
+    }
+
     // Makes sure all pngs are loaded before trying to draw the board
     checkAllImagesLoaded(){
+
         this.imagesLoaded++;
-        if (this.imagesLoaded === 12){
+        if (this.imagesLoaded === Object.keys(this.imgDict).length){
             this.drawGame();
         }
     }
