@@ -1,5 +1,0 @@
-FIXARE DOMContent not loaded when pages are exported
-Fix schermo che scorre con spacebar
-
-
-Riattivare autoupdate chrome
