@@ -25,10 +25,10 @@ export class GameCanvas {
 
         this.gameState = new GameState(width, height);
 
-        this.imgDict = {ufo_img: "../js/lib/images/ufo.png", top_enemy_img: "../js/lib/images/top_enemy.png", mid_enemy_img: "../js/lib/images/mid_enemy.png",
-            bot_enemy_img: "../js/lib/images/bot_enemy.png", player_img: "../js/lib/images/player_ship.png", invulnerable_player_img: "../js/lib/images/invulnerable_player_ship.png",
-            shield_img: "../js/lib/images/shield.png", player_bullet_img: "../js/lib/images/player_bullet.png", enemy_bullet_img: "../js/lib/images/enemy_bullet.png",
-            x2_img: "../js/lib/images/power_up_2x.png", rf_img: "../js/lib/images/power_up_rf.png", inv_img: "../js/lib/images/power_up_inv.png"
+        this.imgDict = {ufo_img: "../img/ufo.png", top_enemy_img: "../img/top_enemy.png", mid_enemy_img: "../img/mid_enemy.png",
+            bot_enemy_img: "../img/bot_enemy.png", player_img: "../img/player_ship.png", invulnerable_player_img: "../img/invulnerable_player_ship.png",
+            shield_img: "../img/shield.png", player_bullet_img: "../img/player_bullet.png", enemy_bullet_img: "../img/enemy_bullet.png",
+            x2_img: "../img/power_up_2x.png", rf_img: "../img/power_up_rf.png", inv_img: "../img/power_up_inv.png"
         }
 
         this.createImgVariables();
