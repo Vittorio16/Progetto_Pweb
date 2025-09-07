@@ -9,7 +9,7 @@ function resizeGameCanvas() {
     if (!canvas) return;
 
     const viewportHeight = window.innerHeight;
-    const maxHeight = viewportHeight * 0.5;
+    const maxHeight = viewportHeight * 0.6;
     const height = maxHeight;
 
     canvas.style.height = `${height}px`;

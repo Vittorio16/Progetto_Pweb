@@ -1,6 +1,8 @@
 <?php
 require_once "dbaccess.php";
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
 
 // Called at the end of each game to check for cheating

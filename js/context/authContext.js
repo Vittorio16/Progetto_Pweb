@@ -130,8 +130,9 @@ export class AuthContext {
                 `;
             }
         }
-
-        dia.showModal();
+        if (!dia.open){
+            dia.showModal();
+        }
     }
 
 
@@ -173,8 +174,9 @@ export class AuthContext {
                 `;
             }
         }
-
-        dia.showModal();
+        if (!dia.open){
+            dia.showModal();
+        }
     }
 
 
